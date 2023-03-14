@@ -139,7 +139,7 @@ async def get_auth_token(discord_id:str):
         })
     
     # return auth_token
-    return f"{entry['auth_token']}%{entry['discord_id']}"
+    return {'auth_token' : f"{entry['auth_token']}%{entry['discord_id']}"}
 
 
 @router.patch('/{discord_id}/regen_auth_token')
