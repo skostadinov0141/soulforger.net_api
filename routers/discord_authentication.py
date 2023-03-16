@@ -42,7 +42,7 @@ def validate_token(req: Request):
 
     # Get unparsed token and split it i authToken and discordId
     unparsedToken = req.headers["Authorization"].split('%')
-    authToken = unparsedToken[0]
+    uuid = unparsedToken[0]
     discordId = unparsedToken[1]
 
     # Find expected entry in DB
@@ -58,7 +58,7 @@ def validate_token(req: Request):
                 'description':'Dieser Account existiert nicht.'
             }
         })
-    if entry['auth_token'] != authToken:
+    if entry['uuid'] != uuid:
         raise HTTPException(status_code=400, detail={
             'en':{
                 'description':'The Auth-Token is not valid.'
@@ -87,7 +87,7 @@ async def register_account(discord_id: str, discord_username: str):
     
     # Generate entry
     newEntry = {
-        'auth_token':str(uuid.uuid4()),
+        'uuid':str(uuid.uuid4()),
         'discord_id':discord_id,
         'discord_username':discord_username,
         'preferred_lang':'de',
@@ -97,12 +97,12 @@ async def register_account(discord_id: str, discord_username: str):
     }
 
     # ensure no collisions are present
-    while database.users.find_one({'auth_token':newEntry['auth_token']}) is not None:
-        newEntry['auth_token'] = str(uuid.uuid4())
+    while database.users.find_one({'uuid':newEntry['uuid']}) is not None:
+        newEntry['uuid'] = str(uuid.uuid4())
 
     # write to DB
     database.users.insert_one(newEntry)
-    return database.users.find_one({'auth_token': newEntry['auth_token']}, {'_id':False})
+    return database.users.find_one({'uuid': newEntry['uuid']}, {'_id':False})
 
 
 @router.delete('/{discord_id}/delete_account')
@@ -139,11 +139,11 @@ async def get_auth_token(discord_id:str):
         })
     
     # return auth_token
-    return {'auth_token' : f"{entry['auth_token']}%{entry['discord_id']}"}
+    return {'auth_token' : f"{entry['uuid']}%{entry['discord_id']}"}
 
 
-@router.patch('/{discord_id}/regen_auth_token')
-async def regen_auth_token(discord_id:str):
+@router.patch('/{discord_id}/regen_uuid')
+async def regen_uuid(discord_id:str):
     # get entry, if empty return 404 error
     entry = database.users.find_one({'discord_id': discord_id})
     if entry is None:
@@ -157,12 +157,12 @@ async def regen_auth_token(discord_id:str):
         })
     
     # Generate new UUID, keep generating until no match in DB
-    entry['auth_token'] = str(uuid.uuid4())
-    while database.users.find_one({'auth_token':entry['auth_token']}) is not None:
-        entry['auth_token'] = str(uuid.uuid4())
+    entry['uuid'] = str(uuid.uuid4())
+    while database.users.find_one({'uuid':entry['uuid']}) is not None:
+        entry['uuid'] = str(uuid.uuid4())
     
     # Replace current auth_token with new unique one
-    database.users.find_one_and_update({'discord_id':discord_id},{'$set':{'auth_token':entry['auth_token']}})
+    database.users.find_one_and_update({'discord_id':discord_id},{'$set':{'uuid':entry['uuid']}})
     return database.users.find_one({'discord_id': discord_id}, {'_id':False})
     
 # endregion
