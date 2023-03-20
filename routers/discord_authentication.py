@@ -40,7 +40,7 @@ router = APIRouter(
 
 def validate_token(req: Request):
 
-    # Get unparsed token and split it i authToken and discordId
+    # Get unparsed token and split it in authToken and discordId
     unparsedToken = req.headers["Authorization"].split('%')
     uuid = unparsedToken[0]
     discordId = unparsedToken[1]
