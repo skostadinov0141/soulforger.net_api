@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from utilities.talentGenerator import generateTalentList
 
 class PrimaryAttributes(BaseModel):
     MU:int = 0
@@ -27,6 +28,7 @@ class SecondaryAttributes(BaseModel):
 
 class Talent(BaseModel):
     name:str = ""
+    category:str = ""
     att_1:str = ""
     att_2:str = ""
     att_3:str = ""
@@ -92,7 +94,7 @@ class DSACharacter(BaseModel):
     secondary_attributes:SecondaryAttributes = SecondaryAttributes().dict()
 
     # Talents -> reference the Talent model
-    talents:dict = {}
+    talents:list = generateTalentList()
 
     # Combat Skills -> reference the CombatSkill model
     combat_skills:dict = {}
