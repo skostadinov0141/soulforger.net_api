@@ -1,4 +1,5 @@
 __pycache__/
-routers/__pycache__/
+*.py[cod]
+*$py.class
 secrets.yaml
 dsa_soulforger.env
