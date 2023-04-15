@@ -42,6 +42,6 @@ router = APIRouter(
 
 @router.get('/get_schema')
 async def get_character_schema():#(auth : bool = Depends(validate_token)):
-    return DSACharacter().dict()
+    return DSACharacter()
 
 # endregion

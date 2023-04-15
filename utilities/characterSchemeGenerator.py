@@ -76,3 +76,22 @@ def generateTalentList():
             "att_3":splitAtts[2],
         })
     return output
+
+def generateCombatSkillList():
+    returnValue = [
+        {'name' : 'Armbrüste', 'lf' : 'FF', 'at' : 0, 'pa' : 0},
+        {'name' : 'Bögen', 'lf' : 'FF', 'at' : 0, 'pa' : 0},
+        {'name' : 'Dolche', 'lf' : 'GE', 'at' : 0, 'pa' : 0},
+        {'name' : 'Fechtwaffen', 'lf' : 'GE', 'at' : 0, 'pa' : 0},
+        {'name' : 'Hiebwaffen', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Kettenwaffen', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Lanzen', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Raufen', 'lf' : 'GE/KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Schilde', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Schwerter', 'lf' : 'GE/KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Stangenwaffen', 'lf' : 'GE/KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Wurfwaffen', 'lf' : 'FF', 'at' : 0, 'pa' : 0},
+        {'name' : 'Zweihandhiebwaffen', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+        {'name' : 'Zweihandschwerter', 'lf' : 'KK', 'at' : 0, 'pa' : 0},
+    ]
+    return returnValue

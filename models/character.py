@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from utilities.talentGenerator import generateTalentList
+from utilities.characterSchemeGenerator import generateTalentList, generateCombatSkillList
 
 class PrimaryAttributes(BaseModel):
     MU:int = 0
@@ -36,6 +36,7 @@ class Talent(BaseModel):
 
 class CombatSkill(BaseModel):
     name:str = ""
+    lf:str = ""
     at:int = 0
     pa:int = 0
 
@@ -97,7 +98,7 @@ class DSACharacter(BaseModel):
     talents:list = generateTalentList()
 
     # Combat Skills -> reference the CombatSkill model
-    combat_skills:dict = {}
+    combat_skills:list = generateCombatSkillList()
 
     # Close Range weapons -> reference the CloseRangeWeapon model
     close_range_weapons:dict = {}
