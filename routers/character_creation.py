@@ -2,24 +2,24 @@ from fastapi import APIRouter, HTTPException, Request, Depends
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from urllib.parse import quote_plus 
-from routers.discord_authentication import validate_token
-from models.character import DSACharacter
+from models.character_creation.character import DSACharacter
+from dotenv import load_dotenv
 import bson
 import yaml
 import uuid
+import os
 
 
 
 # region Database
-secrets = None
 
-with open(file='secrets.yaml', mode='r', encoding='utf8') as file:
-    secrets = yaml.safe_load(file)
+load_dotenv('dsa_soulforger.env')
 
-uri = "mongodb://%s:%s@%s" % (
-    quote_plus(secrets['database_username']), 
-    quote_plus(secrets['database_password']), 
-    f"{secrets['database_ip']}:{secrets['database_port']}"
+uri = "mongodb://%s:%s@%s/?authSource=%s" % (
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_MISC_UNAME')), 
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_MISC_PASS')), 
+    f"{os.environ.get('DSA_SOULFORGER_DB_IP')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_MISC_SOURCE')),
 )
 
 mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
