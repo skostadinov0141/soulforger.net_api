@@ -58,7 +58,8 @@ async def register_account(acc: Account):
     final_result = True
     final_details = []
     for i in validations:
-        final_result = i['result']
+        if i['result'] == False:
+            final_result = False
         for d in i['details']:
             final_details.append(d)
     if acc.eula == False:
@@ -69,6 +70,8 @@ async def register_account(acc: Account):
         })
     if final_result == False:
         raise HTTPException(400,final_details)
+    
+    pprint(final_details)
 
     # Hash pw and create an account in the DB if all inputs are valid
     hashedPWD = bcrypt.hashpw(acc.password.encode(), bcrypt.gensalt(rounds=14))

@@ -1,5 +1,6 @@
 import re
 from pymongo.database import Database
+from pprint import pprint
 
 def validate_pw(password:str):
     response = {
@@ -53,12 +54,14 @@ def validate_email(email:str, db:Database):
             'category':'email',
             'detail':'Bitte eine E-Mail eingeben.'
         })
-    if(db['users'].find_one({'email': email}) == None) == False:
+    # Check if the email already exists in the DB
+    if (db['users'].find_one({'email': email}) != None):
         response['result'] = False
         response['details'].append({
             'category':'email',
             'detail':'Ein Benutzer mit dieser E-Mail existiert bereits.'
         })
+    # Regex to verify email formatting
     regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     if re.search(regex, email) is None:
         response['result'] = False
@@ -66,4 +69,5 @@ def validate_email(email:str, db:Database):
             'category':'email',
             'detail':'Die E-Mail ist nicht gültig.'
         })
+    pprint(response)
     return response
