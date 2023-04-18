@@ -68,6 +68,18 @@ async def register_account(acc: Account):
             'category':'eula',
             'detail':'NONE'
         })
+    if acc.password != acc.password_confirmation:
+        final_result = False
+        final_details.append({
+            'category':'password_confirmation',
+            'detail':'Die Passwörter stimmen nicht überein.'
+        })
+    if acc.display_name == '':
+        final_result = False
+        final_details.append({
+            'category':'display_name',
+            'detail':'Der Anzeigename darf nicht leer sein.'
+        })
     if final_result == False:
         raise HTTPException(400,final_details)
     
@@ -78,6 +90,7 @@ async def register_account(acc: Account):
     userProfile = {
         'email':acc.email,
         'password_hash':hashedPWD.decode(),
+        'display_name':acc.display_name
     }
     # insert into database
     database['users'].insert_one(userProfile)
