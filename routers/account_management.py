@@ -6,6 +6,7 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from validators.account_management import validate_pw, validate_email
 from pprint import pprint
+import datetime
 import bson
 import yaml
 import uuid
@@ -96,4 +97,30 @@ async def register_account(acc: Account):
     database['users'].insert_one(userProfile)
     return {'result' : True}
 
+
+@router.post("/login")
+async def login(email: str, password: str, request: Request, keep_logged_in: bool):
+    user = database.users.find_one({'email':email})
+    if user and bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
+        session_id = request.state.session_id
+
+        database.sessions.insert_one({
+            "session_id": session_id, 
+            "user_id": user["_id"],
+            # "expires_at" : (datetime.datetime.utcnow() + datetime.timedelta(hours=6))
+        })
+        return {"result": True}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+
+@router.get("/verify-session")
+async def verify_session(email: str, password: str, request: Request):
+    session_id = request.state.session_id
+    session = database.sessions.find_one({'session_id':session_id})
+    if session:
+        return {'result':True}
+    else:
+        raise HTTPException(status_code=401, detail="No session found.")
+        
 # endregion
