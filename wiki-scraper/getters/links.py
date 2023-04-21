@@ -48,18 +48,41 @@ def get_species_links(link : str):
     return links
 
 
-def get_links_recursive(link: str, result: list, count: int = 0) -> list:
+def get_links_recursive(link: str) -> list | False | str:
+    if link.count('https://www.ulisses-ebooks.de') != 0:
+        return False
     base_link = 'https://ulisses-regelwiki.de/'
     page = get(link)
     content = page.content
 
     soup = BeautifulSoup(content, 'html.parser')
 
-    if len(soup.find_all('a', {'class':'ulSubMenu'})) == 0 and soup.find('div', {'class':'body'}) == None:
-        print(find_all(link, 'https://'))
-        result.append('\n' + link)
-        count += 1
-        print(f'{count}  --------->  {str(uuid4())}')
+    result = []
+
+    a_tags_all : ResultSet = soup.find_all('a')
+    a_links_relevant = []
+
+    for i in a_tags_all:
+        i : Tag = i
+        href:str = i.attrs['href']
+        if (href.count('.html') == 1) and (href.count('https://www.ulisses-ebooks.de') == 0):
+            a_links_relevant.append(f'{base_link}{i.get("href")}')
+
+    if len(a_links_relevant) == 0:
+        return str
+    else:
+        for link in a_links_relevant:
+            get_links_recursive(link)
+
+
+
+
+    # if len(soup.find_all('a', {'class':'ulSubMenu'})) == 0 and len(soup.find_all('div', {'class':'body'})) == 0:
+    # if link.count('https://') == 1 and len(soup.find_all('a', {'class':'ulSubMenu'})) == 0:
+    #     for i in soup.find_all('div', {'class':'body'}):
+    #         if(len(i.find_all('a')))
+    #     print(f'Entry  --------->  {str(uuid4())}')
+    #     return link
 
     for i in soup.find_all('a', {'class':'ulSubMenu'}):
         get_links_recursive(f'\n{base_link}{i.get("href")}', result, count)
