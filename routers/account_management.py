@@ -53,7 +53,6 @@ async def register_account(acc: Account):
         validate_email(acc.email, database),
         validate_pw(acc.password)
     ]
-
     # iterate over the validation dicts and if any validation is false return a 400 Bad Request
     # additionally make sure that the eula has been accepted
     final_result = True
@@ -83,9 +82,6 @@ async def register_account(acc: Account):
         })
     if final_result == False:
         raise HTTPException(400,final_details)
-    
-    pprint(final_details)
-
     # Hash pw and create an account in the DB if all inputs are valid
     hashedPWD = bcrypt.hashpw(acc.password.encode(), bcrypt.gensalt(rounds=14))
     userProfile = {
@@ -100,27 +96,36 @@ async def register_account(acc: Account):
 
 @router.post("/login")
 async def login(email: str, password: str, request: Request, keep_logged_in: bool):
+    # Get user from DB and create a session object to save to the DB
     user = database.users.find_one({'email':email})
+    existing_session = database.sessions.find_one({'session_id': request.state.session_id})
+    # Check if a session already exists, if it does return true
+    if existing_session:
+        return {"result": True}
     if user and bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
         session_id = request.state.session_id
-
-        database.sessions.insert_one({
+        session_obj = {
             "session_id": session_id, 
             "user_id": user["_id"],
-            # "expires_at" : (datetime.datetime.utcnow() + datetime.timedelta(hours=6))
-        })
+        }
+        # If keep_logged_in is false include a ttl field to the session object
+        if keep_logged_in == False:
+            session_obj["expires_at"] = datetime.datetime.utcnow() + datetime.timedelta(hours=6)
+        # Insert into DB
+        database.sessions.insert_one(session_obj)
         return {"result": True}
     else:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+        raise HTTPException(status_code=401, detail="Passwort und E-Mail stimmen nicht überein.")
     
 
 @router.get("/verify-session")
-async def verify_session(email: str, password: str, request: Request):
+async def verify_session(request: Request):
     session_id = request.state.session_id
     session = database.sessions.find_one({'session_id':session_id})
     if session:
         return {'result':True}
     else:
-        raise HTTPException(status_code=401, detail="No session found.")
+        return {'result':False}
+
         
 # endregion
