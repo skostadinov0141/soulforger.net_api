@@ -1,27 +1,56 @@
+import os
+from urllib.parse import quote_plus
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+from pymongo import MongoClient
 import requests
 from pprint import pprint
+import json
+import re
 
-from getters.links import get_categories, get_species_links, get_links_recursive
+from getters.links import get_categories, get_links_recursive
+from getters.spezies import get_SF
 
 category_links = get_categories()
+category_names = [
+    'Spezies',
+    'Kulturen',
+    'Professionen',
+    'Sonderfertigkeiten',
+    'Vor- und Nachteile',
+    'Magie',
+    'Götterwirken',
+    'Rüstkammer',
+    'Bestiarium',
+    'Herbarium',
+    'Gifte und Krankheiten',
+]
 
 count = 0
 
-for i in range(1,12):
-    relevant_links = []
-    relevant_links.append(f'\n-{i}-\n')
-    relevant_links.extend(get_links_recursive(category_links[i],[], len(relevant_links)))
-    with open('relevant_links.txt', 'w', encoding='utf8') as file:
-        file.writelines(relevant_links)
-        file.close()
-    count += len(relevant_links) - 1
-    print()
-    print()
-    print(f'Entries Found  =====================================>  {len(relevant_links) - 1}')
-    print(f'Total Entries Found  ===============================>  {count}')
-    print(f'Finished working on  ===============================>  {category_links[i]}')
-    print()
-    print()
+load_dotenv('dsa_soulforger.env')
+
+uri = "mongodb://%s:%s@%s/?authSource=%s" % (
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_UNAME')), 
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_PASS')), 
+    f"{os.environ.get('DSA_SOULFORGER_DB_IP')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
+    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_SOURCE')),
+)
+
+mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
+
+database = mongo['dsa_soulforger_net']
+
+# for i in range(1,12):
+#     result = get_links_recursive(category_links[i], category_names[i - 1])
+#     database['wiki'].insert_many(result)
+
+# for tag in database.wiki.distinct('title'):
+#     if not re.match(r'[A-Za-z0-9|()I\-äüâëêÔôïöÄ\‘ÜÖV*:\[\]\’û.,ß/&\'!… ]+$', tag):
+#         print(tag)
+
+with open('./wiki-scraper/test.json', 'w+', encoding='utf8') as file:
+    file.write('')
+    json.dump(get_SF('https://ulisses-regelwiki.de/Spez_Achaz.html'),file,ensure_ascii=False, indent=4)
 
 
