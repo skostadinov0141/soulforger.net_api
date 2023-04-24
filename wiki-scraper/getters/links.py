@@ -37,6 +37,7 @@ def get_categories():
 def get_links_recursive(link: str, category_path: str) -> list | dict:
     base_link = 'https://ulisses-regelwiki.de/'
     page = get(link)
+    page.encoding = "UTF-8"
     content = page.content
 
     soup = BeautifulSoup(content, 'html.parser')
@@ -64,9 +65,8 @@ def get_links_recursive(link: str, category_path: str) -> list | dict:
         category_path = category_path.replace('ﾃ､','ä').replace('Ă¤','ä').replace('ĂĽ','ü').replace('Ă¶','ö').replace('Ăź','ß').replace('Ă´','Ô').replace('Ă„','Ä').replace('ﾃｼ','ü').replace('ﾃ彙','Ü').replace('ÃĪ','ä').replace('Ãž','ü').replace('â€™','\'').replace('Ãķ','ö').replace('Ăś','Ü').replace('Ă–','Ö')
         print(category_path)
         return {
-            'category_path':'|'.join(category_path.split('|')[:-1]),
+            'category_path':category_path.split('|'),
             'title':category_path.split('|')[len(category_path.split('|')) - 1],
-            'tags':category_path.split('|'),
             'link': link
         }
 
