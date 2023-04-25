@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Request, Depends
+from typing import Optional
+from fastapi import APIRouter, HTTPException, Request, Depends, Response
 from models.account_management.account import Account
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -44,6 +45,27 @@ router = APIRouter(
 
 
 # region API Methods
+
+def authenticate(request: Request) -> Optional[dict]:
+    session_id = request.state.session_id
+    session = database.sessions.find_one({'session_id':session_id})
+    if session:
+        return {
+            'session_id':session_id,
+            'user_id': session['user_id'],
+            'session_oid': session['_id']
+        }
+    else:
+        raise HTTPException(status_code=401, detail='Not Authorized!')
+
+
+@router.get('/user')
+async def get_user_data( response: Response, auth: dict = Depends(authenticate)):
+    db_result = database['users'].find_one({'_id':auth['user_id']})
+    del db_result['_id']
+    del db_result['password_hash']
+    return db_result
+
 
 @router.post('/register')
 async def register_account(acc: Account):
