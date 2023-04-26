@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import character_creation
@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,6 +27,6 @@ app.include_router(skill_checks.router)
 async def add_session_id(request: Request, call_next):
     session_id = request.cookies.get("session_id")
     request.state.session_id = session_id or str(uuid4())
-    response = await call_next(request)
-    response.set_cookie("session_id", request.state.session_id)
+    response : Response = await call_next(request)
+    response.set_cookie("session_id", value=request.state.session_id, httponly=True, secure=True, samesite="none")
     return response
