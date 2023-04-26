@@ -123,7 +123,9 @@ async def login(email: str, password: str, request: Request, keep_logged_in: boo
     existing_session = database.sessions.find_one({'session_id': request.state.session_id})
     # Check if a session already exists, if it does return true
     if existing_session:
-        return {"result": True}
+        user_obj = database.users.find_one({'_id':existing_session['user_id']},{'_id':False,'email':False,'password_hash':False})
+        user_obj['expires_at'] = existing_session["expires_at"]
+        return user_obj
     if user and bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
         session_id = request.state.session_id
         session_obj = {
@@ -132,10 +134,12 @@ async def login(email: str, password: str, request: Request, keep_logged_in: boo
         }
         # If keep_logged_in is false include a ttl field to the session object
         if keep_logged_in == False:
-            session_obj["expires_at"] = datetime.datetime.utcnow() + datetime.timedelta(hours=6)
+            session_obj["expires_at"] = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(hours=6)
         # Insert into DB
         database.sessions.insert_one(session_obj)
-        return {"result": True}
+        user_obj = database.users.find_one({'_id':user["_id"]},{'_id':False,'email':False,'password_hash':False})
+        user_obj['expires_at'] = session_obj["expires_at"]
+        return user_obj
     else:
         raise HTTPException(status_code=401, detail="Passwort und E-Mail stimmen nicht überein.")
     
