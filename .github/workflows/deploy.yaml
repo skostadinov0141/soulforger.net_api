@@ -23,5 +23,5 @@ jobs:
             docker rm API
             docker rmi soulforger-api 
             docker build -t soulforger-api .
-            docker run --name API --link mongoDB:mongo -p 8000:8000 -d soulforger-api
+            docker run --name API --link mongoDB:mongo -p 8000:8000 --user user -d soulforger-api
             docker ps

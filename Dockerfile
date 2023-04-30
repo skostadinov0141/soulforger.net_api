@@ -1,5 +1,7 @@
 FROM python:3.10
 
+RUN adduser --system --no-create-home user
+
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
