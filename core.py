@@ -10,7 +10,7 @@ from uuid import uuid4
 from dotenv import load_dotenv
 import os
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 origins = ["http://localhost:5173", "http://soulforger.net:5173", "https://soulforger.net"]
 
