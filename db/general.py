@@ -6,8 +6,7 @@ from pymongo.database import Database
 from pymongo.collection import Collection
 from bson.objectid import ObjectId
 
-
-class DbManager():
+class GeneralDbManipulator():
 
     def __init__(self):
         load_dotenv('dsa_soulforger.env')
@@ -34,6 +33,7 @@ class DbManager():
 
         self.dbMiscInstance : Database = mongo['dsa_soulforger_net']
 
+    
 
     """Returns a Collection object based on the role defined by the asUser param."""
     def getCollection(self, collection_name: str, asUser: str = '') -> Collection:
@@ -61,25 +61,3 @@ class DbManager():
             dict1[rel_name1] = dict2['_id']
             dict2[rel_name2] = dict1['_id']
         return [dict1, dict2]
-    
-
-    """Gets a specific user based on session ID. Returns None if no such session is found."""
-    def getUserFromSession(self, session_id: str) -> ObjectId | None:
-        result = self.getCollection('sessions','am').find_one({'session_id':session_id})
-        if result:
-            return result['user_id']
-        return None
-    
-    """Gets a specific user based on session ID. Returns None if no such session is found."""
-    def getSession(self, session_id: str) -> ObjectId | None:
-        result = self.getCollection('sessions','am').find_one({'session_id':session_id})
-        if result:
-            return result
-        return None
-
-    def getProfileFromUser(self, user_id: str) -> dict:
-        return self.getCollection('profiles').find_one({'owner':user_id})
-    
-    """Check if an email already exists and is connected to a user"""
-    def checkIfEmailExist(self,email:str):
-        return self.getCollection('users','am').find_one({'email':email})

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import character_creation
 from routers import account_management
 from routers import skill_checks
+from routers import profile_management
 
 from uuid import uuid4
 from dotenv import load_dotenv
@@ -24,6 +25,7 @@ app.add_middleware(
 app.include_router(character_creation.router)
 app.include_router(account_management.router)
 app.include_router(skill_checks.router)
+app.include_router(profile_management.router)
 
 @app.middleware("http")
 async def add_session_id(request: Request, call_next):
@@ -31,5 +33,4 @@ async def add_session_id(request: Request, call_next):
     request.state.session_id = session_id or str(uuid4())
     response : Response = await call_next(request)
     response.set_cookie("session_id", value=request.state.session_id, httponly=True)
-    print(request.state.session_id)
     return response

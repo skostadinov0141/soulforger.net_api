@@ -2,7 +2,7 @@ import re
 from pymongo.database import Database
 from pprint import pprint
 
-from db.db_manager import DbManager
+from db._db_manager import DbManager
 
 def validate_pw(password:str):
     response = {
@@ -37,9 +37,9 @@ def validate_pw(password:str):
     if len(password) < 10:
         response['result'] = False
         response['details'].append({
-                'category':'password',
-                'detail':'Passwort ist zu kurz.' # password too short
-            }) 
+            'category':'password',
+            'detail':'Passwort ist zu kurz.' # password too short
+        }) 
     # Return the result dictionary
     return response
 
@@ -57,7 +57,7 @@ def validate_email(email:str):
             'detail':'Bitte eine E-Mail eingeben.'
         })
     # Check if the email already exists in the DB
-    if DbManager().checkIfEmailExist(email):
+    if DbManager().accounts.checkIfEmailExist(email):
         response['result'] = False
         response['details'].append({
             'category':'email',

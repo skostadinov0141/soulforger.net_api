@@ -45,12 +45,4 @@ for i in range(1,12):
     result = get_links_recursive(category_links[i], category_names[i - 1])
     database['wiki'].insert_many(result)
 
-# for tag in database.wiki.distinct('title'):
-#     if not re.match(r'[A-Za-z0-9|()I\-äüâëêÔôïöÄ\‘ÜÖV*:\[\]\’û.,ß/&\'!… ]+$', tag):
-#         print(tag)
-
-# with open('./wiki-scraper/test.json', 'w+', encoding='utf8') as file:
-#     file.write('')
-#     json.dump(get_SF('https://ulisses-regelwiki.de/Spez_Achaz.html'),file,ensure_ascii=False, indent=4)
-
 
