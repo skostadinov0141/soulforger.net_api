@@ -12,7 +12,7 @@ import os
 
 app = FastAPI()
 
-origins = ["http://localhost:5173", "http://soulforger.net:5173"]
+origins = ["http://localhost:5173", "http://soulforger.net:5173", "https://soulforger.net"]
 
 app.add_middleware(
     CORSMiddleware,
