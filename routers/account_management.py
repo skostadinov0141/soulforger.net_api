@@ -1,10 +1,12 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Request, Depends, Response
-from models.account_management.account import Account
+from db.db_manager import DbManager
+from models.account_management.account import Account, Login
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from urllib.parse import quote_plus 
 from dotenv import load_dotenv
+from models.profile_management import Profile
 from validators.account_management import validate_pw, validate_email
 from pprint import pprint
 import datetime
@@ -16,23 +18,7 @@ import bcrypt
 import re
 
 
-
-# region Database
-
-load_dotenv('dsa_soulforger.env')
-
-uri = "mongodb://%s:%s@%s/?authSource=%s" % (
-    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_UNAME')), 
-    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_PASS')), 
-    f"{os.environ.get('DSA_SOULFORGER_DB_IP')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
-    quote_plus(os.environ.get('DSA_SOULFORGER_DB_ACCOUNTMANAGER_SOURCE')),
-)
-
-mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
-
-database = mongo['dsa_soulforger_net']
-# endregion
-
+db = DbManager()
 
 
 # region Router
@@ -46,33 +32,35 @@ router = APIRouter(
 
 # region API Methods
 
-def authenticate(request: Request) -> Optional[dict]:
+def authenticate(request: Request) -> Optional[ObjectId]:
     session_id = request.state.session_id
-    session = database.sessions.find_one({'session_id':session_id})
-    if session:
-        return {
-            'session_id':session_id,
-            'user_id': session['user_id'],
-            'session_oid': session['_id']
-        }
+    user = db.getUserFromSession(session_id)
+    pprint(user)
+    if user:
+        return user
     else:
         raise HTTPException(status_code=401, detail='Not Authorized!')
 
+@router.get('/validate-session')
+async def get_user_data( request: Request, user_id: dict = Depends(authenticate)):
+    if user_id:
+        return {}
+    raise HTTPException(status_code=401)
 
 @router.get('/user')
-async def get_user_data( response: Response, auth: dict = Depends(authenticate)):
-    db_result = database['users'].find_one({'_id':auth['user_id']})
-    del db_result['_id']
-    del db_result['password_hash']
-    return db_result
+async def get_user_data( request: Request, user_id: dict = Depends(authenticate)):
+    existing_session = db.getSession(request.state.session_id)
+    user_obj = db.getProfileFromUser(user_id)
+    del user_obj['_id']
+    del user_obj['owner']
+    return user_obj
 
 
 @router.post('/register')
 async def register_account(acc: Account):
-    print('here')
     # Validate email and password, store the results in a list of dicts
     validations = [
-        validate_email(acc.email, database),
+        validate_email(acc.email),
         validate_pw(acc.password)
     ]
     # iterate over the validation dicts and if any validation is false return a 400 Bad Request
@@ -103,55 +91,60 @@ async def register_account(acc: Account):
             'detail':'Der Anzeigename darf nicht leer sein.'
         })
     if final_result == False:
+        pprint(final_result)
         raise HTTPException(400,final_details)
     # Hash pw and create an account in the DB if all inputs are valid
     hashedPWD = bcrypt.hashpw(acc.password.encode(), bcrypt.gensalt(rounds=14))
-    userProfile = {
+    user_account = {
         'email':acc.email,
         'password_hash':hashedPWD.decode(),
-        'display_name':acc.display_name
+        'characters_list':[],
+        'campaigns_list':[],
+        'games_list':[],
+        'community_contributions_list':[],
     }
+    # Create needed collections and reference them
+    profile : Profile = Profile(
+        display_name=acc.display_name
+    )
     # insert into database
-    database['users'].insert_one(userProfile)
-    return {'result' : True}
+    related_dicts = db.createRelationOO(dict1=user_account,rel_name1='profile_document',dict2=profile.dict(),rel_name2='owner')
+    db.getCollection('users','am').insert_one(related_dicts[0])
+    db.getCollection('profiles').insert_one(related_dicts[1])
+    # compile return dict
+    return_dict = db.getProfileFromUser(related_dicts[0]['_id'])
+    del return_dict['owner']
+    del return_dict['_id']
+    return return_dict
 
 
 @router.post("/login")
-async def login(email: str, password: str, request: Request, keep_logged_in: bool):
+async def login(request: Request, login: Login):
     # Get user from DB and create a session object to save to the DB
-    user = database.users.find_one({'email':email})
-    existing_session = database.sessions.find_one({'session_id': request.state.session_id})
+    existing_session = db.getSession(request.state.session_id)
     # Check if a session already exists, if it does return true
     if existing_session:
-        user_obj = database.users.find_one({'_id':existing_session['user_id']},{'_id':False,'email':False,'password_hash':False})
-        user_obj['expires_at'] = existing_session["expires_at"]
+        user_obj = db.getProfileFromUser(existing_session['user_id'])
+        del user_obj['_id']
+        del user_obj['owner']
+        pprint(existing_session["expires_at"])
+        user_obj['expires_at'] = existing_session["expires_at"].astimezone(tz=datetime.timezone.utc)
+        pprint(user_obj['expires_at'])
         return user_obj
-    if user and bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
+    user = db.checkIfEmailExist(login.email)
+    if user and bcrypt.checkpw(login.password.encode(), user['password_hash'].encode()):
         session_id = request.state.session_id
         session_obj = {
             "session_id": session_id, 
             "user_id": user["_id"],
         }
-        # If keep_logged_in is false include a ttl field to the session object
-        if keep_logged_in == False:
-            session_obj["expires_at"] = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(hours=6)
         # Insert into DB
-        database.sessions.insert_one(session_obj)
-        user_obj = database.users.find_one({'_id':user["_id"]},{'_id':False,'email':False,'password_hash':False})
-        user_obj['expires_at'] = session_obj["expires_at"]
+        db.getCollection('sessions','am').insert_one(session_obj)
+        user_obj = db.getProfileFromUser(user['_id'])
+        del user_obj['owner']
+        del user_obj['_id']
         return user_obj
     else:
-        raise HTTPException(status_code=401, detail="Passwort und E-Mail stimmen nicht überein.")
-    
-
-@router.get("/verify-session")
-async def verify_session(request: Request):
-    session_id = request.state.session_id
-    session = database.sessions.find_one({'session_id':session_id})
-    if session:
-        return {'result':True}
-    else:
-        return {'result':False}
-
+        raise HTTPException(status_code=400, detail="Passwort und E-Mail stimmen nicht überein.")
         
 # endregion

@@ -2,6 +2,8 @@ import re
 from pymongo.database import Database
 from pprint import pprint
 
+from db.db_manager import DbManager
+
 def validate_pw(password:str):
     response = {
         'result':True,
@@ -43,7 +45,7 @@ def validate_pw(password:str):
 
 
 
-def validate_email(email:str, db:Database):
+def validate_email(email:str):
     response = {
         'result':True,
         'details':[]
@@ -55,7 +57,7 @@ def validate_email(email:str, db:Database):
             'detail':'Bitte eine E-Mail eingeben.'
         })
     # Check if the email already exists in the DB
-    if (db['users'].find_one({'email': email}) != None):
+    if DbManager().checkIfEmailExist(email):
         response['result'] = False
         response['details'].append({
             'category':'email',
@@ -69,5 +71,4 @@ def validate_email(email:str, db:Database):
             'category':'email',
             'detail':'Die E-Mail ist nicht gültig.'
         })
-    pprint(response)
     return response

@@ -11,9 +11,11 @@ import os
 
 app = FastAPI()
 
+origins = ["http://localhost:5173", "http://soulforger.net:5173"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,5 +30,6 @@ async def add_session_id(request: Request, call_next):
     session_id = request.cookies.get("session_id")
     request.state.session_id = session_id or str(uuid4())
     response : Response = await call_next(request)
-    response.set_cookie("session_id", value=request.state.session_id, httponly=True, secure=True, samesite="none")
+    response.set_cookie("session_id", value=request.state.session_id, httponly=True)
+    print(request.state.session_id)
     return response
