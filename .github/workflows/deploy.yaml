@@ -1,0 +1,23 @@
+name: Deploy
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  job_one:
+    name: Deploy
+    runs-on: debian-latest
+    steps:
+      - name: testing ssh connection
+        uses: appleboy/ssh-action@master
+        with: 
+          host: soulforger.net
+          username: simeon
+          key: ${{ secrets.SSH_KEY }}
+          port: 25540
+          script: |
+            cd dsa.soulforger.net/api/
+            git pull origin master
+            ${{ secrets.GIT_UNAME }}
+            ${{ secrets.GIT_KEY }}
+            git status
