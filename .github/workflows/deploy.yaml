@@ -13,17 +13,15 @@ jobs:
         with: 
           host: soulforger.net
           username: simeon
+          password: ${{ secrets.SUDO_PW }}
           key: ${{ secrets.SSH_KEY }}
           port: 25540
           script: |
             cd dsa.soulforger.net/api/
             git pull origin master
-            ${{ secrets.GIT_UNAME }}
-            ${{ secrets.GIT_KEY }}
-            sudo docker stop API
-            ${{ secrets.SUDO_PW }}
-            sudo docker rm API
-            sudo docker rmi soulforger-api 
-            sudo docker build -t soulforger-api .
-            sudo docker run --name API --link mongoDB:mongo -p 8000:8000 -d soulforger-api
-            sudo docker ps
+            docker stop API
+            docker rm API
+            docker rmi soulforger-api 
+            docker build -t soulforger-api .
+            docker run --name API --link mongoDB:mongo -p 8000:8000 -d soulforger-api
+            docker ps
