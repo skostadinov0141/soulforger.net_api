@@ -20,4 +20,10 @@ jobs:
             git pull origin master
             ${{ secrets.GIT_UNAME }}
             ${{ secrets.GIT_KEY }}
-            git status
+            sudo docker stop API
+            ${{ secrets.SUDO_PW }}
+            sudo docker rm API
+            sudo docker rmi soulforger-api 
+            sudo docker build -t soulforger-api .
+            sudo docker run --name API --link mongoDB:mongo -p 8000:8000 -d soulforger-api
+            sudo docker ps
