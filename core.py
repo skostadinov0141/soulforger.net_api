@@ -5,12 +5,13 @@ from routers import character_creation
 from routers import account_management
 from routers import skill_checks
 from routers import profile_management
+from routers import wiki
 
 from uuid import uuid4
 from dotenv import load_dotenv
 import os
 
-app = FastAPI(docs_url=None, redoc_url=None)
+app = FastAPI()#docs_url=None, redoc_url=None)
 
 origins = ["http://localhost:5173", "http://soulforger.net:5173", "https://soulforger.net"]
 
@@ -26,6 +27,7 @@ app.include_router(character_creation.router)
 app.include_router(account_management.router)
 app.include_router(skill_checks.router)
 app.include_router(profile_management.router)
+app.include_router(wiki.router)
 
 @app.middleware("http")
 async def add_session_id(request: Request, call_next):
