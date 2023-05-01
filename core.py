@@ -32,5 +32,5 @@ async def add_session_id(request: Request, call_next):
     session_id = request.cookies.get("session_id")
     request.state.session_id = session_id or str(uuid4())
     response : Response = await call_next(request)
-    response.set_cookie("session_id", value=request.state.session_id, httponly=True)
+    response.set_cookie("session_id", value=request.state.session_id, httponly=True, secure=True)
     return response

@@ -23,6 +23,13 @@ class AccountDbManipulator(GeneralDbManipulator):
             return result
         return None
     
+    """Removes a session from the DB."""
+    def deleteSession(self, session_id: str) -> ObjectId | None:
+        result = self.getCollection('sessions','am').delete_one({'session_id':session_id})
+        if self.getSession(session_id):
+            return True
+        return False
+
     """Check if an email already exists and is connected to a user"""
     def checkIfEmailExist(self,email:str):
         return self.getCollection('users','am').find_one({'email':email})

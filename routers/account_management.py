@@ -41,8 +41,13 @@ def authenticate(request: Request) -> Optional[ObjectId]:
         raise HTTPException(status_code=401, detail='Not Authorized!')
 
 
+@router.delete('/log-out')
+async def log_out(request:Request, user_id: ObjectId = Depends(authenticate)):
+    return {'result':db.accounts.deleteSession(request.state.session_id)}
+
+
 @router.get('/validate-session')
-async def get_user_data( request: Request, user_id: dict = Depends(authenticate)):
+async def validate_session( request: Request, user_id: ObjectId = Depends(authenticate)):
     if user_id:
         return {}
     raise HTTPException(status_code=401)
@@ -81,6 +86,18 @@ async def register_account(acc: Account):
         final_details.append({
             'category':'display_name',
             'detail':'Der Anzeigename darf nicht leer sein.'
+        })
+    if len(acc.display_name) < 5:
+        final_result = False
+        final_details.append({
+            'category':'display_name',
+            'detail':'Der Anzeigename ist zu kurz. (min. 5)'
+        })
+    if len(acc.display_name) > 20:
+        final_result = False
+        final_details.append({
+            'category':'display_name',
+            'detail':'Der Anzeigename ist zu lang. (max. 20)'
         })
     if final_result == False:
         raise HTTPException(400,final_details)

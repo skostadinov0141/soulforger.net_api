@@ -9,6 +9,7 @@ from models.profile_management.profile_management import Profile
 from validators.account_management import validate_pw, validate_email
 from pprint import pprint
 from routers.account_management import authenticate
+from validators.profiles import validateProfile
 
 
 db = DbManager()
@@ -31,8 +32,12 @@ async def get_user_data( request: Request, user_id: ObjectId = Depends(authentic
     del user_obj['owner']
     return user_obj
 
+
 @router.patch('/user')
 async def update_profile(profile: Profile, user_id: ObjectId = Depends(authenticate)):
+    validation = validateProfile(profile)
+    if validation['result'] == False:
+        raise HTTPException(status_code=400, detail=validation['details'])
     result = db.profiles.updateProfile(user_id, profile)
     del result['owner']
     del result['_id']
