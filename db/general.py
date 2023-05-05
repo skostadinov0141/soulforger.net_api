@@ -11,7 +11,7 @@ class GeneralDbManipulator():
     def __init__(self):
         load_dotenv('dsa_soulforger.env')
 
-        testing: bool = False
+        testing: bool = True
 
         if testing == True:
             uri = "mongodb://%s:%s@%s/?authSource=%s" % (

@@ -34,6 +34,10 @@ async def search(request: Request, query: WikiSearchQuery, user_id: ObjectId = D
 async def get_unique_tags(request: Request, user_id: ObjectId = Depends(authenticate)):
     return db.wiki.findUniqueTags()
 
+@router.get('/sub-categories')
+async def get_unique_sub_categories(request: Request, category: str, user_id: ObjectId = Depends(authenticate)):
+    return list(db.wiki.findUniqueSubCategories(category))
+
 @router.get('/titles')
 async def get_unique_titles(request: Request, user_id: ObjectId = Depends(authenticate)):
     return db.wiki.findUniqueTitles()
