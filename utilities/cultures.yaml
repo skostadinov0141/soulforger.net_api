@@ -1,0 +1,189 @@
+- Elf:
+  - name: Auelfen
+    language: Isdira
+    written_language: Isdira-Zeichen
+    culture_package: Betören +1, Boote & Schiffe +1, Fährtensuchen +1, Fischen & Angeln +2, Körperbeherrschung +2, Musizieren +2, Orientierung +1, Pflanzenkunde +1, Schwimmen +2, Singen +2, Sinnesschärfe +1, Tierkunde +1, Verbergen +1, Wildnisleben +1
+
+  - name: Firnelfen
+    language: Isdira
+    written_language: Isdira-Zeichen
+    culture_package: Fährtensuchen +2, Fischen & Angeln +1, Klettern +1, Körperbeherrschung +2, Musizieren +2, Orientierung +2, Selbstbeherrschung +1, Singen +2, Sinnesschärfe +2, Tierkunde +2, Verbergen +2, Wildnisleben +2
+
+  - name: Steppenelfen
+    language: Isdira
+    written_language: Isdira-Zeichen
+    culture_package: Fährtensuchen +2, Körperbeherrschung +2, Musizieren +1, Orientierung +2, Pflanzenkunde +1, Reiten +2, Singen +1, Sinnesschärfe +2, Tanzen +1, Tierkunde +2, Wildnisleben +2
+
+  - name: Waldelfen
+    language: Isdira
+    written_language: Isdira-Zeichen
+    culture_package: Fährtensuchen +2, Klettern +1, Körperbeherrschung +2, Musizieren +2, Orientierung +1, Pflanzenkunde +2, Singen +2, Sinnesschärfe +1, Tierkunde +2, Verbergen +2, Wildnisleben +1
+
+- Mensch:
+  - name: Andergaster
+    language: Garethi
+    written_language: Kusliker Zeichen
+    culture_package: Holzbearbeitung +2, Orientierung +1, Pflanzenkunde +1, Sagen & Legenden +1, Tierkunde +1, Wildnisleben +2
+
+  - name: Aranier
+    language: Tulamidya, Garethi
+    written_language: Kusliker Zeichen, Garethi 
+    culture_package: Betören +1, Brett- & Glücksspiel +1, Gassenwissen +2, Handel +2, Menschenkenntnis +1, Rechnen +1, Sagen & Legenden +1, Stoffbearbeitung +1, Überreden +2
+
+  - name: Bornländer
+    language: Garethi 
+    written_language: Kusliker Zeichen
+    culture_package: Fährtensuchen +1, Holzbearbeitung +2, Lebensmittelbearbeitung +1, Orientierung +1, Pflanzenkunde +1, Wildnisleben +1, Zechen +2
+
+  - name: Ferkinas
+    language: Ferkina  
+    written_language: null
+    culture_package: Einschüchtern +1, Fährtensuchen +1, Klettern +2, Körperbeherrschung +1, Kraftakt +1 Pflanzenkunde +1, Reiten +1, Selbstbeherrschung +1, Steinbearbeitung +2, Tierkunde +1, Verbergen +1, Wildnisleben +2, Zechen +1
+
+  - name: Fjarninger
+    language: Fjarningsch
+    written_language: null
+    culture_package: Einschüchtern +2, Fährtensuchen +1, Körperbeherrschung +1, Kraftakt +2, Metallbearbeitung +1, Orientierung +2, Selbstbeherrschung +1, Steinbearbeitung +1, Wildnisleben +2
+
+  - name: Gjalsker
+    language: Gjalskisch
+    written_language: null
+    culture_package: Einschüchtern +1, Fährtensuchen +1, Klettern +1, Körperbeherrschung +1, Kraftakt +2, Orientierung +1, Pflanzenkunde +1, Sagen & Legenden +2, Selbstbeherrschung +1, Tierkunde +1, Wildnisleben +1
+
+  - name: Horasier
+    language: Garethi
+    written_language: Kusliker Zeichen
+    culture_package: Betören +1, Boote & Schiffe +1, Etikette +2, Gassenwissen +2, Geographie +1, Geschichtswissen +1, Handel +1, Mechanik +1, Rechnen +2, Rechtskunde +2, Tanzen +1
+
+  - name: Koboldweltler
+    language: Garethi, Koboldisch
+    written_language: null
+    culture_package: Brett- & Glücksspiel +1, Gassenwissen +1, Gaukeleien +2, Klettern +1, Magiekunde +1, Malen & Zeichnen +1, Musizieren +1, Singen +1, Sphärenkunde +1, Tanzen +1, Zechen +1
+
+  - name: Maraskaner
+    language: Garethi, Tulamidya
+    written_language: Kusliker Zeichen, Tulamidya
+    culture_package: Götter & Kulte +1, Heilkunde Gift +2, Orientierung +1, Pflanzenkunde +2, Tierkunde +2, Verbergen +1, Wildnisleben +1
+
+  - name: Mhanadistani
+    language: Tulamidya 
+    written_language: Tulamidya 
+    culture_package: Brett- & Glücksspiel +2, Gassenwissen +2, Geschichtswissen +1, Götter & Kulte +2, Handel +2, Magiekunde +1, Sagen & Legenden +2, Überreden +1
+
+  - name: Mittelreicher
+    language: Garethi  
+    written_language: Kusliker Zeichen 
+    culture_package: Holzbearbeitung +1, Metallbearbeitung +1, Pflanzenkunde +1, Stoffbearbeitung +1, Tierkunde +1
+
+  - name: Mohas
+    language: Mohisch   
+    written_language: null
+    culture_package: Fährtensuchen +1, Heilkunde Gift +1, Körperbeherrschung +1, Orientierung +1, Pflanzenkunde +2, Sagen & Legenden +1, Sinnesschärfe +1, Tierkunde +2, Verbergen +1, Wildnisleben +2
+
+  - name: Nivesen
+    language: Nujuka    
+    written_language: null
+    culture_package: Fährtensuchen +2, Fahrzeuge +1, Orientierung +2, Pflanzenkunde +1, Sagen & Legenden +2, Sinnesschärfe +1, Tierkunde +2, Verbergen +1, Wildnisleben +2
+
+  - name: Norbarden
+    language: Alaani     
+    written_language: Kusliker Zeichen
+    culture_package: Fahrzeuge +2, Geographie +2, Handel +2, Orientierung +1, Überreden +1, Wildnisleben +1
+
+  - name: Nordaventurier
+    language: Alaani, Garethi, Nujuka, Thorwalsch     
+    written_language: Kusliker Zeichen
+    culture_package: Fährtensuchen +1, Handel +1, Holzbearbeitung +1, Lederbearbeitung +1, Orientierung +1, Pflanzenkunde +1, Selbstbeherrschung +1, Tierkunde +1, Wildnisleben +1, Zechen +1
+
+  - name: Nostrier
+    language: Garethi     
+    written_language: Kusliker Zeichen
+    culture_package: Fischen & Angeln +2, Orientierung +1, Pflanzenkunde +1, Sagen & Legenden +1, Tierkunde +1, Wildnisleben +1
+
+  - name: Novadis
+    language: Tulamidya      
+    written_language: Heilige Glyphen von Unau
+    culture_package: Einschüchtern +2, Fährtensuchen +1, Orientierung +2, Rechtskunde +1, Reiten +2, Tierkunde +1, Wildnisleben +2
+
+  - name: Svellttaler
+    language: Garethi      
+    written_language: Kusliker Zeichen
+    culture_package: Fährtensuchen +2, Fahrzeuge +2, Orientierung +1, Pflanzenkunde +1, Sagen & Legenden +1, Tierkunde +1, Wildnisleben +1
+
+  - name: Südaventurier
+    language: Garethi      
+    written_language: Kusliker Zeichen
+    culture_package: Betören +1, Boote & Schiffe +1, Fischen & Angeln +1, Gassenwissen +2, Heilkunde Gift +1, Menschenkenntnis +2, Überreden +1, Willenskraft +1
+
+  - name: Thorwaler
+    language: Thorwalsch       
+    written_language: Thorwalsche Runen, Kusliker Zeichen
+    culture_package: Boote & Schiffe +2, Einschüchtern +1, Fischen & Angeln +2, Geographie +1, Holzbearbeitung +2, Kraftakt +2, Orientierung +1, Sagen & Legenden +1, Zechen +2
+
+  - name: Trollzacker
+    language: Zhulchammaqra        
+    written_language: null
+    culture_package: Einschüchtern +2, Fährtensuchen +1, Klettern +2, Körperbeherrschung +1, Kraftakt +1, Orientierung +1, Selbstbeherrschung +2, Steinbearbeitung +2, Tierkunde +1, Verbergen +1, Wildnisleben +1
+
+  - name: Zahori
+    language: Tulamidya         
+    written_language: Kusliker Zeichen
+    culture_package: Betören +1, Gaukeleien +2, Körperbeherrschung +1, Orientierung +1, Sagen & Legenden +1, Tanzen +1, Taschendiebstahl +2, Überreden +1, Verbergen +1, Verkleiden +1, Wildnisleben +1
+
+  - name: Zyklopäer
+    language: Garethi, Zyklopäisch
+    written_language: Kusliker Zeichen
+    culture_package: Boote & Schiffe +1, Fischen & Angeln +2, Geschichtswissen +1, Götter & Kulte +2, Musizieren +1, Rechnen +1, Rechtskunde +1, Sagen & Legenden +1, Tanzen +1
+
+- Achaz:
+  - name: Achaz-Rha
+    language: Rssahh 
+    written_language: Chuchas 
+    culture_package: Boote & Schiffe +1, Fischen & Angeln +1, Geschichtswissen +2, Götter & Kulte +1, Körperbeherrschung +1, Lederbearbeitung +1, Magiekunde +1, Mechanik +1, Rechnen +2, Sagen & Legenden +2, Schwimmen +1, Selbstbeherrschung +1, Sinnesschärfe +1, Sphärenkunde +1, Steinbearbeitung +2, Sternkunde +1, Tierkunde +1, Wildnisleben +1, Willenskraft +2
+
+  - name: Ctki'ssrr
+    language: Rssahh 
+    written_language: Chrmk  
+    culture_package: Fischen & Angeln +1, Geschichtswissen +1, Götter & Kulte +1, Holzbearbeitung +1, Klettern +1, Körperbeherrschung +1, Kraftakt +1, Lederbearbeitung +1, Orientierung +1, Sagen & Legenden +1, Schwimmen +1, Selbstbeherrschung +1, Sinnesschärfe +1, Steinbearbeitung +2, Tierkunde +2, Verbergen +1, Wildnisleben +1, Willenskraft +1
+
+  - name: Stammesachaz
+    language: Rssahh 
+    written_language: null  
+    culture_package: Boote & Schiffe +1, Fischen & Angeln +2, Holzbearbeitung +1, Körperbeherrschung +1, Lederbearbeitung +2, Orientierung +1, Pflanzenkunde +1, Sagen & Legenden +1, Schwimmen +2, Selbstbeherrschung +1, Sinnesschärfe +1, Steinbearbeitung +1, Tierkunde +1, Verbergen +1, Wildnisleben +2, Willenskraft +1
+
+- Ork:
+  - name: Holberk
+    language: Garethi  
+    written_language: null  
+    culture_package: Holzbearbeitung +1, Körperbeherrschung +1, Kraftakt +1, Lederbearbeitung +1, Metallbearbeitung +1, Pflanzenkunde +1, Sinnesschärfe +1, Steinbearbeitung +1, Tierkunde +1, Wildnisleben +1
+
+  - name: Orkland
+    language: Ologhaijan   
+    written_language: null  
+    culture_package: Einschüchtern +2, Holzbearbeitung +1, Klettern +1, Körperbeherrschung +1, Kraftakt +2, Kriegskunst +1, Lederbearbeitung +1, Orientierung +1, Selbstbeherrschung +1, Sinnesschärfe +1, Steinbearbeitung +1, Tierkunde +1, Wildnisleben +2
+
+- Zwerg:
+  - name: Ambosszwerge
+    language: Rogolan
+    written_language: Rogolan-Runen  
+    culture_package: Einschüchtern +1, Geschichtswissen +1, Kraftakt +2, Kriegskunst +2, Mechanik +1, Metallbearbeitung +2, Orientierung +1, Sagen & Legenden +1, Steinbearbeitung +2, Verbergen +1, Zechen +2
+
+  - name: Brillantzwerge
+    language: Rogolan
+    written_language: Rogolan-Runen  
+    culture_package: Betören +1, Geographie +2, Geschichtswissen +1, Metallbearbeitung +1, Musizieren +1, Sagen & Legenden +1, Schlösserknacken +2, Steinbearbeitung +1, Tanzen +1, Verbergen +2, Zechen +1
+
+  - name: Erzzwerge
+    language: Rogolan
+    written_language: Rogolan-Runen  
+    culture_package: Geschichtswissen +2, Götter & Kulte +2, Mechanik +2, Metallbearbeitung +1, Rechnen +2, Rechtskunde +1, Sagen & Legenden +2, Selbstbeherrschung +1, Steinbearbeitung +1, Verbergen +2, Zechen +1
+
+  - name: Hügelzwerge
+    language: Rogolan
+    written_language: Rogolan-Runen  
+    culture_package: Fahrzeuge +1, Fischen & Angeln +1, Lebensmittelbearbeitung +2, Singen +1, Tanzen +1, Verbergen +2, Zechen +1
+
+  - name: Wildzwerge
+    language: Rogolan
+    written_language: null 
+    culture_package: Einschüchtern +2, Klettern +2, Steinbearbeitung +2, Verbergen +2, Zechen +1

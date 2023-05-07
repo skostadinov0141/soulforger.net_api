@@ -1,0 +1,71 @@
+- name: Mensch
+  lep_base: 5
+  sp_base: -5
+  zk_base: -5
+  gs_base: 8
+  stat_mods:
+    - stats: 
+        - '*'
+      mod: 1
+      op: '|'
+  advantages: null
+  disadvantages: null
+  ap_cost: 0
+
+- name: Elf
+  lep_base: 2
+  sp_base: -4
+  zk_base: -6
+  gs_base: 8
+  stat_mods:
+    - stats: 
+        - 'IN'
+        - 'GE'
+      mod: 1
+      op: '&'
+    - stats: 
+        - 'KL'
+        - 'KK'
+      mod: -2
+      op: '|'
+  advantages:
+    - name: Zauberer
+      lvl: 1
+    - name: Zweistimmiger Gesang
+      lvl: 1
+  disadvantages: null
+  ap_cost: 18
+
+- name: Halbelf
+  lep_base: 5
+  sp_base: -4
+  zk_base: -6
+  gs_base: 8
+  stat_mods:
+    - stats: 
+        - '*'
+      mod: 1
+      op: '|'
+  advantages: null
+  disadvantages: null
+  ap_cost: 0
+
+- name: Zwerg
+  lep_base: 8
+  sp_base: -4
+  zk_base: -4
+  gs_base: 6
+  stat_mods:
+    - stats: 
+        - 'KO'
+        - 'KK'
+      mod: 1
+      op: '&'
+    - stats: 
+        - 'CH'
+        - 'GE'
+      mod: -2
+      op: '|'
+  advantages: null
+  disadvantages: null
+  ap_cost: 61

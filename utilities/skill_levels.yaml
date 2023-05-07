@@ -1,0 +1,62 @@
+- name: Unerfahren
+  ap_base: 900
+  stat_max_level: 12
+  talent_max: 10
+  combat_talent_max: 8
+  stat_points_total: 95
+  spells_lit_max: 8
+  spells_non_traditional: 0
+
+- name: Durchschnittlich
+  ap_base: 1000
+  stat_max_level: 13
+  talent_max: 10
+  combat_talent_max: 10
+  stat_points_total: 98
+  spells_lit_max: 10
+  spells_non_traditional: 1
+
+- name: Erfahren
+  ap_base: 1100
+  stat_max_level: 14
+  talent_max: 10
+  combat_talent_max: 12
+  stat_points_total: 100
+  spells_lit_max: 12
+  spells_non_traditional: 2
+
+- name: Kompetent
+  ap_base: 1200
+  stat_max_level: 15
+  talent_max: 13
+  combat_talent_max: 14
+  stat_points_total: 102
+  spells_lit_max: 14
+  spells_non_traditional: 3
+
+- name: Meisterlich
+  ap_base: 1400
+  stat_max_level: 16
+  talent_max: 16
+  combat_talent_max: 16
+  stat_points_total: 105
+  spells_lit_max: 16
+  spells_non_traditional: 4
+
+- name: Brillant
+  ap_base: 1700
+  stat_max_level: 17
+  talent_max: 19
+  combat_talent_max: 18
+  stat_points_total: 109
+  spells_lit_max: 18
+  spells_non_traditional: 5
+
+- name: Legendär
+  ap_base: 2100
+  stat_max_level: 18
+  talent_max: 20
+  combat_talent_max: 20
+  stat_points_total: 114
+  spells_lit_max: 20
+  spells_non_traditional: 6
