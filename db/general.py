@@ -5,15 +5,16 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
 from bson.objectid import ObjectId
+from json import load
 
 class GeneralDbManipulator():
 
     def __init__(self):
         load_dotenv('dsa_soulforger.env')
+        
+        deployment: bool = load(open('config.json', 'r'))['deployment']
 
-        testing: bool = True
-
-        if testing == True:
+        if deployment == False:
             uri = "mongodb://%s:%s@%s/?authSource=%s" % (
                 quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_UNAME')), 
                 quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_PASS')), 

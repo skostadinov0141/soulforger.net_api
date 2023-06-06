@@ -38,7 +38,7 @@
   - name: Ferkinas
     language: Ferkina  
     written_language: null
-    culture_package: Einschüchtern +1, Fährtensuchen +1, Klettern +2, Körperbeherrschung +1, Kraftakt +1 Pflanzenkunde +1, Reiten +1, Selbstbeherrschung +1, Steinbearbeitung +2, Tierkunde +1, Verbergen +1, Wildnisleben +2, Zechen +1
+    culture_package: Einschüchtern +1, Fährtensuchen +1, Klettern +2, Körperbeherrschung +1, Kraftakt +1, Pflanzenkunde +1, Reiten +1, Selbstbeherrschung +1, Steinbearbeitung +2, Tierkunde +1, Verbergen +1, Wildnisleben +2, Zechen +1
 
   - name: Fjarninger
     language: Fjarningsch

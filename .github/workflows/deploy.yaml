@@ -8,6 +8,12 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Switch to deployment branch
+        uses: jossef/action-set-json-field@v2.1
+        with:
+          file: config.json
+          field: deployment
+          value: true
       - name: testing ssh connection
         uses: appleboy/ssh-action@master
         with: 
