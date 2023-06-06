@@ -5,15 +5,16 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
 from bson.objectid import ObjectId
+from utilities.config import getProductionStatus
 
 class GeneralDbManipulator():
 
     def __init__(self):
         load_dotenv('dsa_soulforger.env')
 
-        testing: bool = True
+        production: bool = getProductionStatus()
 
-        if testing == True:
+        if production == False:
             uri = "mongodb://%s:%s@%s/?authSource=%s" % (
                 quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_UNAME')), 
                 quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_PASS')), 
