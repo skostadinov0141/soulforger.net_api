@@ -22,6 +22,6 @@ EXPOSE 8000
 
 # USER user
 
-ENTRYPOINT [ "./ip_update.sh" ]
+# ENTRYPOINT [ "./ip_update.sh" ]
 
-CMD ["uvicorn", "core:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT [ "./ip_update.sh", "uvicorn", "core:app", "--host", "0.0.0.0", "--port", "8000" ]
