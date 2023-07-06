@@ -56,7 +56,7 @@ async def validate_session( request: Request, user_id: ObjectId = Depends(authen
 @router.post('/register')
 async def register_account(acc: Account):
     # Check if email is already in use
-    if db.accounts.checkIfEmailExist(acc.email):
+    if not db.accounts.checkIfEmailExist(acc.email):
         hashedPWD = bcrypt.hashpw(acc.password.encode(), bcrypt.gensalt(rounds=14))
         user_account = {
             'email':acc.email,
