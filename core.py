@@ -13,7 +13,8 @@ from uuid import uuid4
 from dotenv import load_dotenv
 import os
 
-if json.load(open('config.json', 'r'))['deployment'] == False:
+
+if os.path.exists('dsa_soulforger.env') == False:
     app = FastAPI()
 else:
     app = FastAPI(docs_url=None, redoc_url=None)
@@ -28,7 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(character_creation.router)
+# app.include_router(character_creation.router)
 app.include_router(account_management.router)
 app.include_router(skill_checks.router)
 app.include_router(profile_management.router)

@@ -10,37 +10,30 @@ from json import load
 class GeneralDbManipulator():
 
     def __init__(self):
-        load_dotenv('dsa_soulforger.env')
+        if os.path.exists('dsa_soulforger.env'):
+            load_dotenv('dsa_soulforger.env')
+
         
-        deployment: bool = load(open('config.json', 'r'))['deployment']
+        deployment: bool = os.environ.get('DEPLOYMENT') == 'True'
 
         if deployment == False:
-            uri = "mongodb://%s:%s@%s/?authSource=%s" % (
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_UNAME')), 
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_PASS')), 
-                f"{os.environ.get('DSA_SOULFORGER_DB_IP')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_TESTING_SOURCE')),
+            uri = "mongodb+srv://soulforgerTesting:%s@soulforgerdb.hmyeqw0.mongodb.net/?retryWrites=true&w=majority" % (
+                quote_plus(os.environ.get(f'SOULFORGER_TESTING_PW')), 
             )
             mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
-            self.dbAccountManagerInstance : Database = mongo['dsa_soulforger_net_testing']
-            self.dbMiscInstance : Database = mongo['dsa_soulforger_net_testing']
+            self.dbAccountManagerInstance : Database = mongo['soulforger_testing']
+            self.dbMiscInstance : Database = mongo['soulforger_testing']
         else:
-            uri = "mongodb://%s:%s@%s/?authSource=%s" % (
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_ACCOUNTMANAGER_UNAME')), 
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_ACCOUNTMANAGER_PASS')), 
-                f"{os.environ.get('DSA_SOULFORGER_DB_IP_DEPLOY')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_ACCOUNTMANAGER_SOURCE')),
+            uri = "mongodb+srv://soulforgerUserManager:%s@soulforgerdb.hmyeqw0.mongodb.net/?retryWrites=true&w=majority" % (
+                quote_plus(os.environ.get(f'SOULFORGER_USER_MANAGER_PW')), 
             )
             mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
-            self.dbAccountManagerInstance : Database = mongo['dsa_soulforger_net']
-            uri = "mongodb://%s:%s@%s/?authSource=%s" % (
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_MISC_UNAME')), 
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_MISC_PASS')), 
-                f"{os.environ.get('DSA_SOULFORGER_DB_IP_DEPLOY')}:{os.environ.get('DSA_SOULFORGER_DB_PORT')}",
-                quote_plus(os.environ.get(f'DSA_SOULFORGER_DB_MISC_SOURCE')),
+            self.dbAccountManagerInstance : Database = mongo['soulforger']
+            uri = "mongodb+srv://soulforgerGeneral:%s@soulforgerdb.hmyeqw0.mongodb.net/?retryWrites=true&w=majority" % (
+                quote_plus(os.environ.get(f'SOULFORGER_GENERAL_PW')), 
             )
             mongo = MongoClient(uri, serverSelectionTimeoutMS=5)
-            self.dbMiscInstance : Database = mongo['dsa_soulforger_net']
+            self.dbMiscInstance : Database = mongo['soulforger']
 
     
 
