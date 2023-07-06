@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 import os
 
 
-if os.path.exists('dsa_soulforger.env') == False:
+if os.path.exists('dsa_soulforger.env') == True:
     app = FastAPI()
 else:
     app = FastAPI(docs_url=None, redoc_url=None)
