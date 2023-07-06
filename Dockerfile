@@ -1,6 +1,14 @@
 FROM python:3.10
 
-RUN adduser --system --no-create-home user
+
+# RUN adduser --system --no-create-home user
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get update  \
+    && apt-get -y install \
+    bash \
+    curl \
+    jq
 
 WORKDIR /code
 
@@ -12,6 +20,8 @@ COPY . /code/
 
 EXPOSE 8000
 
-USER user
+# USER user
+
+ENTRYPOINT [ "./ip_update.sh" ]
 
 CMD ["uvicorn", "core:app", "--host", "0.0.0.0", "--port", "8000"]
