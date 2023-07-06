@@ -14,9 +14,9 @@ class GeneralDbManipulator():
             load_dotenv('dsa_soulforger.env')
 
         
-        deployment: bool = os.environ.get('DEPLOYMENT') == 'True'
+        testing: bool = os.environ.get('TESTING') == 'True'
 
-        if deployment == False:
+        if testing:
             uri = "mongodb+srv://soulforgerTesting:%s@soulforgerdb.hmyeqw0.mongodb.net/?retryWrites=true&w=majority" % (
                 quote_plus(os.environ.get(f'SOULFORGER_TESTING_PW')), 
             )
