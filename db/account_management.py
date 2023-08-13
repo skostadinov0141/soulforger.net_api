@@ -9,27 +9,21 @@ class AccountDbManipulator(GeneralDbManipulator):
     def __init__(self) -> None:
         super().__init__()
 
-    """Gets a specific user based on session ID. Returns None if no such session is found."""
-    def getUserFromSession(self, session_id: str) -> ObjectId | None:
-        result = self.getCollection('sessions','am').find_one({'session_id':session_id})
-        if result:
-            return result['user_id']
-        return None
-    
-    """Gets a specific user based on session ID. Returns None if no such session is found."""
-    def getSession(self, session_id: str) -> ObjectId | None:
-        result = self.getCollection('sessions','am').find_one({'session_id':session_id})
-        if result:
-            return result
-        return None
-    
-    """Removes a session from the DB."""
-    def deleteSession(self, session_id: str) -> ObjectId | None:
-        result = self.getCollection('sessions','am').delete_one({'session_id':session_id})
-        if self.getSession(session_id):
-            return True
-        return False
 
-    """Check if an email already exists and is connected to a user"""
-    def checkIfEmailExist(self,email:str):
+    """
+    _summary_ : Gets the user with the given email
+    _email_ : str
+    _returns_ : dict
+    """
+    def getUser(self,email:str):
         return self.getCollection('users','am').find_one({'email':email})
+    
+
+    def createUser(self,email:str,passwordHash:str,displayName:str,eula:bool):
+        return self.getCollection('users','am').insert_one({
+            'email':email,
+            'passwordHash':passwordHash,
+            'displayName':displayName,
+            'eula':eula,
+            'privLevel':0
+        })

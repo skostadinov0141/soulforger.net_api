@@ -17,3 +17,4 @@ orjson==3.9.1
 ujson==5.8.0
 watchfiles==0.19.0
 websockets==11.0.3
+python-jose==3.3.0

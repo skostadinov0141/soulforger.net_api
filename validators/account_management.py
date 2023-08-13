@@ -1,6 +1,5 @@
 import re
 from pymongo.database import Database
-from pprint import pprint
 
 from db._db_manager import DbManager
 
@@ -55,13 +54,6 @@ def validate_email(email:str):
         response['details'].append({
             'category':'email',
             'detail':'Bitte eine E-Mail eingeben.'
-        })
-    # Check if the email already exists in the DB
-    if DbManager().accounts.checkIfEmailExist(email):
-        response['result'] = False
-        response['details'].append({
-            'category':'email',
-            'detail':'Ein Benutzer mit dieser E-Mail existiert bereits.'
         })
     # Regex to verify email formatting
     regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"

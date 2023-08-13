@@ -1,21 +1,13 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Request, Depends, Response
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import jwt
 from db._db_manager import DbManager
 from models.account_management.account import Account, Login
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-from urllib.parse import quote_plus 
-from dotenv import load_dotenv
-from models.profile_management.profile_management import Profile
 from validators.account_management import validate_pw, validate_email
-from pprint import pprint
-import datetime
-import bson
-import yaml
-import uuid
+from datetime import datetime, timedelta
 import os
 import bcrypt
-import re
 
 
 db = DbManager()
@@ -32,81 +24,57 @@ router = APIRouter(
 
 # region API Methods
 
-def authenticate(request: Request) -> Optional[ObjectId]:
-    session_id = request.state.session_id
-    user = db.accounts.getUserFromSession(session_id)
-    if user:
-        return user
+oauth_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
+
+SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+ALGORITHM = os.getenv('JWT_ALGORITHM')
+
+
+@router.post('/login')
+def login(formData:OAuth2PasswordRequestForm = Depends(), remember: bool = False):
+    # Search the database for a user with the given username (usernames are unique identifieres within the database)
+    user = db.accounts.getUser(formData.username)
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     else:
-        raise HTTPException(status_code=401, detail='Not Authorized!')
+        # Compare the saved hash and the recieved password
+        if not bcrypt.checkpw(formData.password.encode(),user['passwordHash'].encode()):
+            raise HTTPException(status_code=400, detail="Incorrect username or password")
+        else:
+            # If the data checks out generate an Access Token
+            data = {}
+            data['sub'] = str(user['_id'])
+            if remember == True:
+                data['exp'] = datetime.utcnow() + timedelta(weeks=24)
+            else:
+                data['exp'] = datetime.utcnow() + timedelta(hours=24)
+            data['privLevel'] = user['privLevel']
+            encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+            return {'access_token': encoded_jwt,'token_type': 'bearer'}
 
 
-@router.delete('/log-out')
-async def log_out(request:Request, user_id: ObjectId = Depends(authenticate)):
-    return {'result':db.accounts.deleteSession(request.state.session_id)}
-
-
-@router.get('/validate-session')
-async def validate_session( request: Request, user_id: ObjectId = Depends(authenticate)):
-    if user_id:
-        return {}
-    raise HTTPException(status_code=401)
+def validate_token(token:str = Depends(oauth_scheme)):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.DecodeError:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+    return decoded_token
 
 
 @router.post('/register')
-async def register_account(acc: Account):
-    # Check if email is already in use
-    if not db.accounts.checkIfEmailExist(acc.email):
-        hashedPWD = bcrypt.hashpw(acc.password.encode(), bcrypt.gensalt(rounds=14))
-        user_account = {
-            'email':acc.email,
-            'password_hash':hashedPWD.decode(),
-            'characters_list':[],
-            'campaigns_list':[],
-            'games_list':[],
-            'community_contributions_list':[],
-        }
-        # Create needed collections and reference them
-        profile : Profile = Profile(
-            display_name=acc.display_name
-        )
-        # insert into database
-        related_dicts = db.general.createRelationOO(dict1=user_account,rel_name1='profile_document',dict2=profile.dict(),rel_name2='owner')
-        db.general.getCollection('users','am').insert_one(related_dicts[0])
-        db.general.getCollection('profiles').insert_one(related_dicts[1])
-        # compile return dict
-        return_dict = db.profiles.getProfileFromUser(related_dicts[0]['_id'])
-        del return_dict['owner']
-        del return_dict['_id']
-        return return_dict
-    else:
-        raise HTTPException(status_code=400, detail='E-Mail bereits in Verwendung.')
-
-
-@router.post("/login")
-async def login(request: Request, login: Login):
-    # Get user from DB and create a session object to save to the DB
-    existing_session = db.accounts.getSession(request.state.session_id)
-    # Check if a session already exists, if it does return true
-    if existing_session:
-        user_obj = db.profiles.getProfileFromUser(existing_session['user_id'])
-        del user_obj['_id']
-        del user_obj['owner']
-        return user_obj
-    user = db.accounts.checkIfEmailExist(login.email)
-    if user and bcrypt.checkpw(login.password.encode(), user['password_hash'].encode()):
-        session_id = request.state.session_id
-        session_obj = {
-            "session_id": session_id, 
-            "user_id": user["_id"],
-        }
-        # Insert into DB
-        db.general.getCollection('sessions','am').insert_one(session_obj)
-        user_obj = db.profiles.getProfileFromUser(user['_id'])
-        del user_obj['owner']
-        del user_obj['_id']
-        return user_obj
-    else:
-        raise HTTPException(status_code=400, detail="Passwort und E-Mail stimmen nicht überein.")
-        
+def register(user_data:Account):
+    # Validate the data
+    if validate_pw(user_data.password) == False:
+        raise HTTPException(status_code=400, detail="Password does not meet requirements")
+    if validate_email(user_data.email) == False:
+        raise HTTPException(status_code=400, detail="Email does not meet requirements")
+    # Check if the username is already in use
+    if db.accounts.getUser(user_data.email) != None:
+        raise HTTPException(status_code=400, detail="Email already in use")
+    # Hash the password
+    hashed_pw = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt())
+    # Create the user
+    db.accounts.createUser(user_data.email, hashed_pw.decode(), user_data.displayName, user_data.eula)
+    return {'success': True}
+    
 # endregion
