@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
+from pymongo.cursor import Cursor
 from bson.objectid import ObjectId
 from json import load
 
@@ -37,29 +38,14 @@ class GeneralDbManipulator():
 
     
 
-    """Returns a Collection object based on the role defined by the asUser param."""
     def getCollection(self, collection_name: str, asUser: str = '') -> Collection:
+        """Returns a Collection object based on the role defined by the asUser param."""
         if(asUser == 'am'):
             return self.dbAccountManagerInstance[collection_name]
         return self.dbMiscInstance[collection_name]
     
 
-    """Create a One to One relation between two dicts."""
-    def createRelationOO(self,dict1: dict, rel_name1: str, dict2: dict, rel_name2: str) -> list:
-        if '_id' in dict1 and '_id' in dict2:
-            dict1[rel_name1] = dict2['_id']
-            dict2[rel_name2] = dict1['_id']
-        elif '_id' in dict1 and '_id' not in dict2:
-            dict2['_id'] = ObjectId()
-            dict1[rel_name1] = dict2['_id']
-            dict2[rel_name2] = dict1['_id']
-        elif '_id' not in dict1 and '_id' in dict2:
-            dict1['_id'] = ObjectId()
-            dict1[rel_name1] = dict2['_id']
-            dict2[rel_name2] = dict1['_id']
-        else:
-            dict1['_id'] = ObjectId()
-            dict2['_id'] = ObjectId()
-            dict1[rel_name1] = dict2['_id']
-            dict2[rel_name2] = dict1['_id']
-        return [dict1, dict2]
+    def paginate(self, data: Cursor, page: int, page_size: int) -> list:
+        """Returns a list of data objects based on the page and page_size params."""
+        return list(data.skip(page * page_size).limit(page_size))
+    

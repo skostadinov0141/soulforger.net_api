@@ -24,21 +24,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/')
-def root():
-    return {'message':'Hello World!'}
-
-@app.get('/locked')
-def locked(token:str = Depends(account_management.validate_token)):
-    return token
-
 # app.include_router(character_creation.router)
 app.include_router(account_management.router)
-
-# @app.middleware("http")
-# async def add_session_id(request: Request, call_next):
-#     session_id = request.cookies.get("auth_token")
-#     request.state.session_id = session_id or str(uuid4())
-#     response : Response = await call_next(request)
-#     response.set_cookie("auth_token", value=request.state.session_id, httponly=True, secure=True)
-#     return response

@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 class Account(BaseModel):
@@ -11,3 +12,8 @@ class Login(BaseModel):
     email: str
     password: str
     remember: bool
+
+class PrivEscalationRequest(BaseModel):
+    reason: str
+    requested_level: int
+    metadata: dict
