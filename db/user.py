@@ -1,46 +1,44 @@
-from bson.objectid import ObjectId
+from datetime import datetime, timedelta
+from bson import ObjectId
 from fastapi import HTTPException
 from db.general import GeneralDbManipulator
-from models.account_management.account import PrivEscalationRequest
-from datetime import datetime, timedelta
+import cloudinary
 
 
-class AccountDbManipulator(GeneralDbManipulator):
+class UserDbManipulator(GeneralDbManipulator):
 
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__()    
 
 
-    def getUserByEmail(self,email:str) -> dict:
+    def getUserProfilePicture(self,id:str) -> str:
         """
-        Gets the user with the given email
+        Gets the user's profile picture
         """
-        result = self.getCollection('users','am').find_one({'email':email})
+        result = self.getCollection('users','am').find_one(
+            {'_id':ObjectId(id)},
+            {'profile_picture_url':1}
+        )
         if not result: raise HTTPException(status_code=400, detail="No such user")
-        return result
-    
-
-    def getUserById(self,id:str) -> dict:
-        """
-        Gets the user with the given id
-        """
-        result = self.getCollection('users','am').find_one({'_id':ObjectId(id)})
-        if not result: raise HTTPException(status_code=400, detail="No such user")
-        return result
+        url = result['profile_picture_url']
+        if not url: raise HTTPException(status_code=400, detail="User has no profile picture")
+        return cloudinary.CloudinaryImage(url).build_url(transformation=[
+            {'quality':'auto:eco'},
+            {'fetch_format':'auto'},
+            {'height':200},
+            {'crop':'fill'}
+        ])
 
 
-    def createUser(self,email:str,password_hash:str,display_name:str,eula:bool) -> bool:
+    def setUserProfilePicture(self,id:str,profile_picture_url:str) -> bool:
         """
-        Creates a new user
+        Sets the user's profile picture
         """
-        return self.getCollection('users','am').insert_one({
-            'email':email,
-            'password_hash':password_hash,
-            'display_name':display_name,
-            'priv_level':0,
-            'metadata':{}
-        }).acknowledged
-    
+        return self.getCollection('users','am').update_one(
+            {'_id':ObjectId(id)},
+            {'$set':{'profile_picture_url':profile_picture_url}}
+        ).acknowledged
+
 
     def requestPrivEscalation(self,priv_request: dict, approval_level:int) -> bool:
         """
@@ -104,6 +102,7 @@ class AccountDbManipulator(GeneralDbManipulator):
         """
         return self.getCollection('priv_requests','am').delete_one({'_id':ObjectId(id)}).acknowledged
 
+
     def updatePrivEscalationRequest(self,priv_request:dict) -> bool:
         """
         Updates a priv escalation request
@@ -131,5 +130,3 @@ class AccountDbManipulator(GeneralDbManipulator):
         ).acknowledged
         if result: self.deletePrivEscalationRequest(priv_request['_id'])
         return result
-
-
