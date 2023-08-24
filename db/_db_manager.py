@@ -1,10 +1,12 @@
 from db.auth import AccountDbManipulator
-from db.user import UserDbManipulator
+from db.profile import ProfileDbManipulator
+from db.privileges import PrivilegesDbManipulator
 
 
 class DbManager():
 
     def __init__(self) -> None:
         self.auth = AccountDbManipulator()
-        self.user = UserDbManipulator()
+        self.profile = ProfileDbManipulator()
+        self.privileges = PrivilegesDbManipulator()
     

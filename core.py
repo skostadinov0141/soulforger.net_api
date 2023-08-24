@@ -3,7 +3,8 @@ from fastapi import Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import auth
-from routers import user
+from routers import privileges
+from routers import profile
 
 from dotenv import load_dotenv
 from uuid import uuid4
@@ -37,4 +38,5 @@ app.add_middleware(
 
 # app.include_router(character_creation.router)
 app.include_router(auth.router)
-app.include_router(user.router)
+app.include_router(privileges.router)
+app.include_router(profile.router)

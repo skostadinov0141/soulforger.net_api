@@ -48,4 +48,4 @@ class GeneralDbManipulator():
     def paginate(self, data: Cursor, page: int, page_size: int) -> list:
         """Returns a list of data objects based on the page and page_size params."""
         return list(data.skip(page * page_size).limit(page_size))
-    
+        

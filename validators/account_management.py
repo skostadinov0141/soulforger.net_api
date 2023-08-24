@@ -33,7 +33,7 @@ def validate_pw(password:str):
                 'detail':v
             })
     # If the password is less than 10 characters long, add an error message
-    if len(password) < 10:
+    if len(password) < 8:
         response['result'] = False
         response['details'].append({
             'category':'password',

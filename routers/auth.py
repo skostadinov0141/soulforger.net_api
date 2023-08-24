@@ -1,14 +1,13 @@
-from typing import Optional
-from fastapi import APIRouter, HTTPException, Request, Depends, Response
+from bson import ObjectId
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from db._db_manager import DbManager
-from models.auth.account import Account, Login, PrivEscalationRequest
+from models.auth.account import Account
 from validators.account_management import validate_pw, validate_email
 from datetime import datetime, timedelta
 import os
 import bcrypt
-from pymongo.cursor import Cursor
 
 
 db = DbManager()
@@ -62,6 +61,10 @@ def validate_token(token:str = Depends(oauth_scheme)) -> dict:
     return decoded_token
 
 
+def get_user_id(token:dict = Depends(validate_token)) -> ObjectId:
+    return ObjectId(token['sub'])
+
+
 def validate_priv_level(decoded_token, required_level:int):
     if decoded_token["priv_level"] < required_level:
         raise HTTPException(status_code=401, detail="Insufficient privileges")
@@ -71,17 +74,27 @@ def validate_priv_level(decoded_token, required_level:int):
 @router.post('/register', description='Creates a new user')
 def register(user_data:Account):
     # Validate the data
+    if user_data.eula != True:
+        raise HTTPException(status_code=400, detail="You must agree to the EULA")
     if validate_pw(user_data.password)['result'] == False:
         raise HTTPException(status_code=400, detail="Password does not meet requirements")
     if validate_email(user_data.email)['result'] == False:
         raise HTTPException(status_code=400, detail="Email does not meet requirements")
     # Check if the username is already in use
-    if db.auth.getUser(user_data.email) != None:
+    if db.auth.checkEmailAvailability(user_data.email) == False:
         raise HTTPException(status_code=400, detail="Email already in use")
     # Hash the password
     hashed_pw = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt())
     # Create the user
-    db.auth.createUser(user_data.email, hashed_pw.decode(), user_data.displayName, user_data.eula)
+    user_id = db.auth.createUser(user_data.email, hashed_pw.decode())
+    db.profile.createProfile(user_id, user_data.displayName)
     return {'success': True}
+
+
+@router.delete('/delete', description='Deletes the user')
+def delete_user(token:dict = Depends(get_user_id)):
+    db.profile.deleteProfile(token)
+    db.privileges.deletePrivEscalationRequestsFromUser(token)
+    return db.auth.deleteUser(token)
 
 # endregion

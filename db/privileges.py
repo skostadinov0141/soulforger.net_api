@@ -1,59 +1,29 @@
 from datetime import datetime, timedelta
 from bson import ObjectId
 from fastapi import HTTPException
-from db.general import GeneralDbManipulator
-import cloudinary
+
+from db._general import GeneralDbManipulator
 
 
-class UserDbManipulator(GeneralDbManipulator):
+class PrivilegesDbManipulator(GeneralDbManipulator):
 
     def __init__(self) -> None:
-        super().__init__()    
-
-
-    def getUserProfilePicture(self,id:str) -> str:
-        """
-        Gets the user's profile picture
-        """
-        result = self.getCollection('users','am').find_one(
-            {'_id':ObjectId(id)},
-            {'profile_picture_url':1}
-        )
-        if not result: raise HTTPException(status_code=400, detail="No such user")
-        url = result['profile_picture_url']
-        if not url: raise HTTPException(status_code=400, detail="User has no profile picture")
-        return cloudinary.CloudinaryImage(url).build_url(transformation=[
-            {'quality':'auto:eco'},
-            {'fetch_format':'auto'},
-            {'height':200},
-            {'crop':'fill'}
-        ])
-
-
-    def setUserProfilePicture(self,id:str,profile_picture_url:str) -> bool:
-        """
-        Sets the user's profile picture
-        """
-        return self.getCollection('users','am').update_one(
-            {'_id':ObjectId(id)},
-            {'$set':{'profile_picture_url':profile_picture_url}}
-        ).acknowledged
-
+        super().__init__()
 
     def requestPrivEscalation(self,priv_request: dict, approval_level:int) -> bool:
-        """
-        Creates a priv escalation request
-        """
-        return self.getCollection('priv_requests','am').insert_one({
-            'reason':priv_request['reason'],
-            'requested_level':priv_request['requested_level'],
-            'user_id':ObjectId(priv_request['user_id']),
-            'request_date':priv_request['request_date'],
-            'expiration_date':datetime.utcnow() + timedelta(weeks=4),
-            'metadata':priv_request['metadata'],
-            'approval_level':approval_level,
-        }).acknowledged
-    
+            """
+            Creates a priv escalation request
+            """
+            return self.getCollection('priv_requests','am').insert_one({
+                'reason':priv_request['reason'],
+                'requested_level':priv_request['requested_level'],
+                'user_id':ObjectId(priv_request['user_id']),
+                'request_date':priv_request['request_date'],
+                'expiration_date':datetime.utcnow() + timedelta(weeks=4),
+                'metadata':priv_request['metadata'],
+                'approval_level':approval_level,
+            }).acknowledged
+        
 
     def getPrivEscalationRequest(self,id:str) -> dict:
         """
@@ -74,8 +44,8 @@ class UserDbManipulator(GeneralDbManipulator):
         )
         if not result: raise HTTPException(status_code=400, detail="No such request")
         return result
-    
-    
+
+
     def getPrivEscalationRequests(self) -> list:
         """
         Gets all priv escalation requests
@@ -95,7 +65,7 @@ class UserDbManipulator(GeneralDbManipulator):
         )
         return result
 
-    
+
     def deletePrivEscalationRequest(self,id:str) -> dict:
         """
         Deletes a priv escalation request
@@ -130,3 +100,10 @@ class UserDbManipulator(GeneralDbManipulator):
         ).acknowledged
         if result: self.deletePrivEscalationRequest(priv_request['_id'])
         return result
+    
+
+    def deletePrivEscalationRequestsFromUser(self,user_id:str) -> bool:
+        """
+        Deletes all priv escalation requests from a user
+        """
+        return self.getCollection('priv_requests','am').delete_many({'user_id':ObjectId(user_id)}).acknowledged
