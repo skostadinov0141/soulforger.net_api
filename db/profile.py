@@ -18,7 +18,16 @@ class ProfileDbManipulator(GeneralDbManipulator):
         """
         result = self.getCollection('profiles','am').find_one(
             {'owner':id},
-            {'_id':0,'owner':0}
+            {
+                '_id':0,
+                'owner':{'$toString':'$owner'},
+                'display_name':1,
+                'bio':1,
+                'profile_picture':1,
+                'preferred_role':1,
+                'preferred_games':1,
+                'badges':1,
+            }
         )
         if not result: raise HTTPException(status_code=400, detail="No such profile")
         return result
