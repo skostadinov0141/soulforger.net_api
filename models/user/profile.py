@@ -11,7 +11,7 @@ class Badge(BaseModel):
 class ProfilePatch(BaseModel):
     display_name: str | None = None
     bio: str | None = None
-    profile_picture: UploadFile | str | None = None
+    profile_picture: UploadFile | None
     preferred_role: str | None = None
     preferred_games: list[str] | None = None
     badges: list[Badge] | None = None
