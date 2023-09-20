@@ -185,6 +185,86 @@ def get_races(query:str = None, page:int|None = None, page_size:int|None = None,
         return list(db.nirve.race.paginate(db.nirve.race.getRaces(query), page, page_size)) 
     return list(db.nirve.race.getRaces(query))
 
+@router.get('/races/{id}', description='Returns a race with the given id')
+def get_race(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.race.getRace(id)
 
+@router.post('/races', description='Creates a new race')
+def create_race(race:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.race.postRace(race)
+
+@router.put('/races/{id}', description='Updates a race with the given id')
+def update_race(id:str, race:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.race.putRace(id, race)
+
+@router.delete('/races/{id}', description='Deletes a race with the given id')
+def delete_race(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.race.deleteRace(id)
+
+
+
+
+
+@router.get('/religions', description='Returns a list of religions based on the given query')
+def get_religions(query:str = None, page:int|None = None, page_size:int|None = None,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    if page and page_size:
+        return list(db.nirve.religion.paginate(db.nirve.religion.getReligions(query), page, page_size)) 
+    return list(db.nirve.religion.getReligions(query))
+
+@router.get('/religions/{id}', description='Returns a religion with the given id')
+def get_religion(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.religion.getReligion(id)
+
+@router.post('/religions', description='Creates a new religion')
+def create_religion(religion:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.religion.postReligion(religion)
+
+@router.put('/religions/{id}', description='Updates a religion with the given id')
+def update_religion(id:str, religion:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.religion.putReligion(id, religion)
+
+@router.delete('/religions/{id}', description='Deletes a religion with the given id')
+def delete_religion(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.religion.deleteReligion(id)
+
+
+
+
+
+@router.get('/skills', description='Returns a list of skills based on the given query')
+def get_skill(query:str = None, page:int|None = None, page_size:int|None = None,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    if page and page_size:
+        return list(db.nirve.skill.paginate(db.nirve.skill.getSkills(query), page, page_size)) 
+    return list(db.nirve.skill.getSkills(query))
+
+@router.get('/skills/{id}', description='Returns a skill with the given id')
+def get_skill(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.skill.getSkill(id)
+
+@router.post('/skills', description='Creates a new skill')
+def create_skill(skill:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.skill.postSkill(skill)
+
+@router.put('/skills/{id}', description='Updates a skill with the given id')
+def update_skill(id:str, skill:NirveBaseModel,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.skill.putSkill(id, skill)
+
+@router.delete('/skills/{id}', description='Deletes a skill with the given id')
+def delete_skill(id:str,token:dict = Depends(validate_token)):
+    validate_priv_level(token, 50)
+    return db.nirve.skill.deleteSkill(id)
 
 # endregion
