@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import auth
 from routers import privileges
 from routers import profile
+from routers.nirve import creator 
 
 from dotenv import load_dotenv
 from uuid import uuid4
@@ -40,3 +41,4 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(privileges.router)
 app.include_router(profile.router)
+app.include_router(creator.router)
