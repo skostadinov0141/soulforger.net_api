@@ -10,7 +10,7 @@ class NirveRaceDbManipulator(GeneralDbManipulator):
         super().__init__()
 
     def postRace(self,skill:NirveBaseModel) -> bool:
-        return self.getCollection("nirve_race").insert_one(skill.dict()).inserted_id
+        return str(self.getCollection("nirve_race").insert_one(skill.dict()).inserted_id)
     
     def getRaces(self, query: str) -> list[dict]:
         return list(self.getCollection("nirve_race").find(

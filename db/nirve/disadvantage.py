@@ -10,7 +10,7 @@ class NirveDisadvantageDbManipulator(GeneralDbManipulator):
         super().__init__()
 
     def postDisadvantage(self,skill:NirveBaseModel) -> bool:
-        return self.getCollection("nirve_disadvantage").insert_one(skill.dict()).inserted_id
+        return str(self.getCollection("nirve_disadvantage").insert_one(skill.dict()).inserted_id)
     
     def getDisadvantages(self, query: str) -> list[dict]:
         return list(self.getCollection("nirve_disadvantage").find(

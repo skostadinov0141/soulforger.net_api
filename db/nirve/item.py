@@ -10,7 +10,7 @@ class NirveItemDbManipulator(GeneralDbManipulator):
         super().__init__()
 
     def postItem(self,skill:NirveBaseModel) -> bool:
-        return self.getCollection("nirve_item").insert_one(skill.dict()).inserted_id
+        return str(self.getCollection("nirve_item").insert_one(skill.dict()).inserted_id)
     
     def getItems(self, query: str) -> list[dict]:
         return list(self.getCollection("nirve_item").find(

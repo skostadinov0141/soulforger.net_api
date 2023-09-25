@@ -10,7 +10,7 @@ class NirveReligionDbManipulator(GeneralDbManipulator):
         super().__init__()
 
     def postReligion(self,skill:NirveBaseModel) -> bool:
-        return self.getCollection("nirve_religion").insert_one(skill.dict()).inserted_id
+        return str(self.getCollection("nirve_religion").insert_one(skill.dict()).inserted_id)
     
     def getReligions(self, query: str) -> list[dict]:
         return list(self.getCollection("nirve_religion").find(

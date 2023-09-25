@@ -10,7 +10,7 @@ class NirveCharacterClassDbManipulator(GeneralDbManipulator):
         super().__init__()
 
     def postCharacterClass(self,skill:NirveBaseModel) -> bool:
-        return self.getCollection("nirve_character_class").insert_one(skill.dict()).inserted_id
+        return str(self.getCollection("nirve_character_class").insert_one(skill.dict()).inserted_id)
     
     def getCharacterClasses(self, query: str) -> list[dict]:
         return list(self.getCollection("nirve_character_class").find(
