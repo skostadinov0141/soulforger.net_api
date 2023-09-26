@@ -1,7 +1,7 @@
 from bson.objectid import ObjectId
 from fastapi import HTTPException
 from db._general import GeneralDbManipulator
-from models.auth.account import PrivEscalationRequest
+from models.auth import PrivEscalationRequest
 from datetime import datetime, timedelta
 
 
@@ -42,7 +42,7 @@ class AccountDbManipulator(GeneralDbManipulator):
         return self.getCollection('users','am').insert_one({
             'email':email,
             'password_hash':password_hash,
-            'priv_level':0,
+            'priv_level':[0],
             'metadata':{},
         }).inserted_id
     

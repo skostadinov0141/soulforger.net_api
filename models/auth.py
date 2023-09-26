@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-class Account(BaseModel):
+class Registration(BaseModel):
     email: str
     displayName: str
     passwordConfirmation: str

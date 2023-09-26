@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from db._db_manager import DbManager
-from models.auth.account import Account
+from models.auth import Registration
 from validators.account_management import validate_pw, validate_email
 from datetime import datetime, timedelta
 import os
@@ -65,14 +65,18 @@ def get_user_id(token:dict = Depends(validate_token)) -> ObjectId:
     return ObjectId(token['sub'])
 
 
-def validate_priv_level(decoded_token, required_level:int):
-    if decoded_token["priv_level"] < required_level:
+def validate_priv_level(decoded_token, required_levels: list):
+    # Create a list of priv codes that are always allowed
+    always_allowed = [100,50]
+    if always_allowed[0] in decoded_token["priv_level"] or always_allowed[1] in decoded_token["priv_level"]:
+        return True
+    if set(required_levels).issubset(decoded_token["priv_level"]) == False:
         raise HTTPException(status_code=401, detail="Insufficient privileges")
     return True
 
 
 @router.post('/register', description='Creates a new user')
-def register(user_data:Account):
+def register(user_data:Registration):
     # Validate the data
     if user_data.eula != True:
         raise HTTPException(status_code=400, detail="You must agree to the EULA")

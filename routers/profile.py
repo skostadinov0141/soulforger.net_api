@@ -2,8 +2,8 @@ from typing import Annotated
 from bson import ObjectId
 from fastapi import APIRouter, Depends, UploadFile
 from db._db_manager import DbManager
-from models.auth.account import PrivEscalationRequest
-from models.user.profile import Profile, ProfilePatch
+from models.auth import PrivEscalationRequest
+from models.profile import Profile, ProfilePatch
 from routers.auth import get_user_id, validate_priv_level, validate_token
 from datetime import datetime
 from cloudinary.uploader import upload, destroy

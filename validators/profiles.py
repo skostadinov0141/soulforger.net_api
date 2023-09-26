@@ -1,4 +1,4 @@
-from models.profile_management.profile_management import Profile
+from models.profile import Profile
 
 
 def validateProfile(profile: Profile) -> dict:
