@@ -3,7 +3,7 @@ from bson import ObjectId
 from fastapi import HTTPException
 from db._general import GeneralDbManipulator
 import cloudinary
-from models.user.profile import ProfileInternal, ProfilePatch
+from models.profile import ProfileInternal, ProfilePatch
 
 
 class ProfileDbManipulator(GeneralDbManipulator):

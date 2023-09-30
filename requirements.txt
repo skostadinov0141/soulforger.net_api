@@ -1,14 +1,11 @@
 uvicorn==0.21.0
 fastapi==0.94.0
-PyYAML==6.0
 pymongo==4.3.3
 pydantic==1.10.6
 python-dotenv==1.0.0
 bcrypt==4.0.1
-python-dateutil==2.8.2
 httpcore==0.17.2
 MarkupSafe==2.1.3
-email-validator==2.0.0.post2
 httptools==0.5.0
 httpx==0.24.1
 itsdangerous==2.1.2
