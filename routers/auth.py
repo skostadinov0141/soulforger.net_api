@@ -67,11 +67,11 @@ def get_user_id(token:dict = Depends(validate_token)) -> ObjectId:
 
 def validate_priv_level(decoded_token, required_levels: list):
     # Create a list of priv codes that are always allowed
-    always_allowed = [100,50]
+    always_allowed = [100, 50]
     if always_allowed[0] in decoded_token["priv_level"] or always_allowed[1] in decoded_token["priv_level"]:
         return True
     if set(required_levels).issubset(decoded_token["priv_level"]) == False:
-        raise HTTPException(status_code=401, detail="Insufficient privileges")
+        raise HTTPException(status_code=401, detail="Insufficient privileges") 
     return True
 
 
