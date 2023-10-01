@@ -29,6 +29,7 @@ else:
 
 origins = ["http://localhost:3000", "http://soulforger.net:5173", "https://soulforger.net", "https://beta.soulforger.net"]
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
