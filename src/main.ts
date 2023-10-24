@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Soulforger API')
     .setDescription('The backend API for the Soulforger web app')
     .setVersion('0.0.1')
