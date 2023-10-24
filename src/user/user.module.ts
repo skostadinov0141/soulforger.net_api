@@ -8,10 +8,10 @@ import { ProfileModule } from 'src/profile/profile.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    ProfileModule
+    ProfileModule,
   ],
   exports: [UserService],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
 })
 export class UserModule {}

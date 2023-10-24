@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -21,7 +21,7 @@ export class UserService {
     createdUser.createdAt = new Date();
     createdUser.updatedAt = new Date();
     createdUser.roles = ['user'];
-    const createdProfile = await this.profileService.create(createdUser);
+    const createdProfile = await this.profileService.create();
     createdUser.profile = createdProfile;
     return createdUser.save();
   }
