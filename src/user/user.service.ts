@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
+import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private profileService: ProfileService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
@@ -16,6 +20,9 @@ export class UserService {
     createdUser.passwordHash = await bcrypt.hash(createUserDto.password, salt);
     createdUser.createdAt = new Date();
     createdUser.updatedAt = new Date();
+    createdUser.roles = ['user'];
+    const createdProfile = await this.profileService.create(createdUser);
+    createdUser.profile = createdProfile;
     return createdUser.save();
   }
 
@@ -32,6 +39,8 @@ export class UserService {
   }
 
   async deleteOneById(id: string): Promise<User> {
+    const user = await this.userModel.findById(id);
+    this.profileService.delete(user.profile._id);
     return this.userModel.findByIdAndRemove(id);
   }
 

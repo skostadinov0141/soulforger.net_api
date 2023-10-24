@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Profile } from 'src/profile/schemas/profile.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -25,6 +26,8 @@ export class User {
   @ApiProperty()
   @Prop()
   updatedAt: Date;
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Profile'})
+  profile: Profile;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
