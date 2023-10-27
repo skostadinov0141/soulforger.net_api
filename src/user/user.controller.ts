@@ -16,6 +16,7 @@ import { User } from './schemas/user.schema';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
+import { RoleGuard } from 'src/role-guard/role-guard.guard';
 
 @ApiTags('user')
 @Controller('user')
@@ -58,6 +59,7 @@ export class UserController {
    */
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['admin']))
   @Put(':id')
   @ApiParam({ name: 'id', type: String })
   async updateOneByIdParam(
@@ -82,6 +84,7 @@ export class UserController {
    */
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['admin']))
   @Delete(':id')
   @ApiParam({ name: 'id', type: String })
   async deleteById(@Param('id') id: string): Promise<User> {
