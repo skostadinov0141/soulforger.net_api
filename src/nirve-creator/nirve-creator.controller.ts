@@ -9,9 +9,8 @@ import {
 } from '@nestjs/common';
 import { NirveCreatorService } from './nirve-creator.service';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { NirveCreateDto } from './dto/nirve-create.dto';
-import { RoleGuard } from 'src/role-guard/role-guard.guard';
+import { Roles } from 'src/auth/auth.decorator';
 
 @ApiTags('Nirve Creator')
 @Controller('v1/nirve-creator')
@@ -20,8 +19,7 @@ export class NirveCreatorController {
 
   @Post(':type')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @UseGuards(new RoleGuard(['nirve-creator']))
+  @Roles(['creator:nirve', 'admin', 'dev'])
   @ApiParam({
     name: 'type',
     enum: [
@@ -45,8 +43,7 @@ export class NirveCreatorController {
 
   @Put(':type/:id')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @UseGuards(new RoleGuard(['nirve-creator']))
+  @Roles(['creator:nirve', 'admin', 'dev'])
   @ApiParam({ name: 'id', type: String })
   @ApiParam({
     name: 'type',
@@ -72,8 +69,7 @@ export class NirveCreatorController {
 
   @Delete(':type/:id')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @UseGuards(new RoleGuard(['nirve-creator']))
+  @Roles(['creator:nirve', 'admin', 'dev'])
   @ApiParam({ name: 'id', type: String })
   @ApiParam({
     name: 'type',

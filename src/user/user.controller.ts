@@ -4,63 +4,76 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiProperty,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
-import { RoleGuard } from 'src/role-guard/role-guard.guard';
+import { SearchUserDto } from './dto/search-users.dto';
+import { OwnUserGuard } from 'src/own-user/own-user.guard';
+import { Roles } from 'src/auth/auth.decorator';
+import { Public } from 'src/auth/public.decorator';
 
 @ApiTags('user')
 @Controller('v1/user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  /**
-   * Create a new user
-   */
+  @Public()
   @Post()
+  @ApiOperation({ summary: 'Creates a user and their associated data' })
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }
 
-  /**
-   * Get all users
-   */
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Search through users by providing a query object in the searchQuery and/or limit + skip in the query params.' })
+  @Roles(['admin', 'user'])
+  @ApiQuery({ name: 'limit', type: Number, required: false })
+  @ApiQuery({ name: 'skip', type: Number, required: false })
+  @ApiQuery({ name: 'searchQuery', type: String, required: false })
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(
+    @Query('searchQuery') searchQuery: string,
+    @Query('limit') limit?: number,
+    @Query('skip') skip?: number,
+  ): Promise<User[]> {
+    if (!searchQuery) {
+      searchQuery = '{}';
+    }
+    return this.userService.findAll(JSON.parse(searchQuery), limit, skip);
   }
 
-  /**
-   * Update own user
-   */
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Put()
-  async updateOneById(
-    @Req() request: Request,
-    @Body() user: UpdateUserDto,
-  ): Promise<User> {
-    return this.userService.updateOneById((request as any).user.sub, user);
+  @ApiOperation({ summary: 'Find a specific user based on their ID' })
+  @Roles(['admin', 'user'])
+  @Get(':id')
+  @ApiParam({ name: 'id', type: String })
+  async findOneById(@Param('id') id: string): Promise<User> {
+    return this.userService.findOneById(id);
   }
 
-  /**
-   * Update user by id
-   */
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @UseGuards(new RoleGuard(['admin']))
-  @Put(':id')
+  @ApiOperation({ summary: 'Update a specific user based on their ID' })
+  @Roles(['admin', 'user'])
+  @UseGuards(OwnUserGuard)
+  @Patch(':id')
   @ApiParam({ name: 'id', type: String })
   async updateOneByIdParam(
     @Param('id') id: string,
@@ -69,36 +82,13 @@ export class UserController {
     return this.userService.updateOneById(id, user);
   }
 
-  /**
-   * Delete own user
-   */
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Delete()
-  async delete(@Req() request: Request): Promise<User> {
-    return this.userService.deleteOneById((request as any).user.sub);
-  }
-
-  /**
-   * Delete user by id
-   */
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @UseGuards(new RoleGuard(['admin']))
+  @ApiOperation({ summary: 'Delete a specific user based on their ID' })
+  @Roles(['admin', 'user'])
+  @UseGuards(OwnUserGuard)
   @Delete(':id')
   @ApiParam({ name: 'id', type: String })
   async deleteById(@Param('id') id: string): Promise<User> {
     return this.userService.deleteOneById(id);
-  }
-
-  /**
-   * Get user by id
-   */
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Get(':id')
-  @ApiParam({ name: 'id', type: String })
-  async findOneById(@Param('id') id: string): Promise<User> {
-    return this.userService.findOneById(id);
   }
 }

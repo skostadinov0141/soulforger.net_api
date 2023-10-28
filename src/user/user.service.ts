@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { ProfileService } from 'src/profile/profile.service';
+import { SearchUserDto } from './dto/search-users.dto';
 
 @Injectable()
 export class UserService {
@@ -48,7 +49,13 @@ export class UserService {
     return this.userModel.findOne({ email: email });
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find({}, { passwordHash: false }).exec();
+  async findAll(
+    searchQuery: SearchUserDto,
+    limit?: number,
+    skip?: number,
+  ): Promise<User[]> {
+    return this.userModel
+      .find(searchQuery, { passwordHash: false }, { limit: limit, skip: skip })
+      .exec();
   }
 }
