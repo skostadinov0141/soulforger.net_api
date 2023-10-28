@@ -14,10 +14,10 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<TokenDto> {
     const user = await this.userService.findOneByEmail(email);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("User doesn't exist");
     }
     if (!(await bcrypt.compare(password, user.passwordHash))) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Password doesn't match");
     }
     const payload = {
       sub: user._id,
@@ -43,7 +43,7 @@ export class AuthService {
     const payload = await this.jwtService.verifyAsync(refreshToken);
     const user = await this.userService.findOneById(payload.sub);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("User doesn't exist");
     }
     const newPayload = {
       sub: user._id,
