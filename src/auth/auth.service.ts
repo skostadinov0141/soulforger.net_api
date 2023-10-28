@@ -23,12 +23,12 @@ export class AuthService {
       sub: user._id,
       profile: user.profile._id,
       roles: user.roles,
-      exp: 60 * 30,
+      exp: Date.now() + 60 * 30 * 1000,
       iat: Date.now(),
     };
     const refreshPayload = {
       sub: user._id,
-      exp: 60*60*24*30,
+      exp: Date.now() + 60*60*24*30*1000,
       iat: Date.now(),
     };
     return {
@@ -49,12 +49,12 @@ export class AuthService {
       sub: user._id,
       profile: user.profile._id,
       roles: user.roles,
-      exp: 60 * 30,
+      exp: Date.now() + 60 * 30 * 1000,
       iat: Date.now(),
     };
     const newRefreshPayload = {
       sub: user._id,
-      exp: 60*60*24*30,
+      exp: Date.now() + 60*60*24*30*1000,
       iat: Date.now(),
     };
     return {
