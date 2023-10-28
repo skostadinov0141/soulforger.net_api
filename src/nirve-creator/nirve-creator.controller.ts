@@ -14,7 +14,7 @@ import { NirveCreateDto } from './dto/nirve-create.dto';
 import { RoleGuard } from 'src/role-guard/role-guard.guard';
 
 @ApiTags('Nirve Creator')
-@Controller('nirve-creator')
+@Controller('v1/nirve-creator')
 export class NirveCreatorController {
   constructor(private nirveCreatorService: NirveCreatorService) {}
 

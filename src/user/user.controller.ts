@@ -19,7 +19,7 @@ import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { RoleGuard } from 'src/role-guard/role-guard.guard';
 
 @ApiTags('user')
-@Controller('user')
+@Controller('v1/user')
 export class UserController {
   constructor(private userService: UserService) {}
 

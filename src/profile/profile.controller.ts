@@ -14,7 +14,7 @@ import { Request } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @ApiTags('Profile')
-@Controller('profile')
+@Controller('v1/profile')
 export class ProfileController {
   constructor(private profileService: ProfileService) {}
 

@@ -6,7 +6,7 @@ import { TokenDto } from './dto/token.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @ApiTags('auth')
-@Controller('auth')
+@Controller('v1/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
