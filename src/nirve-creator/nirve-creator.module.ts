@@ -10,6 +10,7 @@ import { NirveItemSchema } from './schemas/nirve-item.schema';
 import { NirveReligionSchema } from './schemas/nirve-religion.schema';
 import { NirveSkillSchema } from './schemas/nirve-skill.schema';
 import { NirveSpellSchema } from './schemas/nirve-spell.schema';
+import { UserSchema } from 'src/user/schemas/user.schema';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NirveSpellSchema } from './schemas/nirve-spell.schema';
     MongooseModule.forFeature([
       { name: 'NirveSpell', schema: NirveSpellSchema },
     ]),
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [NirveCreatorController],
   providers: [NirveCreatorService],
