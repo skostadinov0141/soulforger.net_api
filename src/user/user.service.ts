@@ -7,24 +7,35 @@ import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { ProfileService } from 'src/profile/profile.service';
 import { SearchUserDto } from './dto/search-users.dto';
+import { Profile } from 'src/profile/schemas/profile.schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private profileService: ProfileService,
+    @InjectModel(Profile.name) private profileModel: Model<Profile>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
+    const createdProfile = new this.profileModel();
+
+    createdProfile.createdAt = new Date();
+    createdProfile.updatedAt = new Date();
+
     const salt = await bcrypt.genSalt(10);
     createdUser.passwordHash = await bcrypt.hash(createUserDto.password, salt);
     createdUser.createdAt = new Date();
     createdUser.updatedAt = new Date();
     createdUser.roles = ['user'];
-    const createdProfile = await this.profileService.create();
+
     createdUser.profile = createdProfile;
-    return createdUser.save();
+    createdProfile.owner = createdUser;
+
+    await createdProfile.save();
+    await createdUser.save();
+
+    return this.userModel.findById(createdUser._id, { passwordHash: false });
   }
 
   async findOneById(id: string): Promise<User> {
@@ -41,7 +52,8 @@ export class UserService {
 
   async deleteOneById(id: string): Promise<User> {
     const user = await this.userModel.findById(id);
-    this.profileService.delete(user.profile._id);
+    const profile = await this.profileModel.findById(user.profile._id);
+    this.profileModel.findByIdAndDelete(user.profile._id);
     return this.userModel.findByIdAndRemove(id);
   }
 

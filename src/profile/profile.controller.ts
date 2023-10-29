@@ -3,51 +3,63 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UserIsOwnerGuard } from 'src/own-user/user-is-owner.guard';
+import { Roles } from 'src/auth/auth.decorator';
 
 @ApiTags('Profile')
 @Controller('v1/profile')
 export class ProfileController {
   constructor(private profileService: ProfileService) {}
 
-  /**
-   * Update own profile
-   */
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Put()
-  async update(@Req() request: Request, @Body() profile: UpdateProfileDto) {
-    return this.profileService.updateById(
-      (request as any).user.profile,
-      profile,
-    );
+  @ApiOperation({
+    summary:
+      'Get all profiles that a certain optional query applies to. Limit and skip can be provided for pagination.',
+  })
+  @ApiParam({ name: 'limit', type: Number, required: false })
+  @ApiParam({ name: 'skip', type: Number, required: false })
+  @ApiParam({ name: 'searchQuery', type: String, required: false })
+  @Get()
+  async findOne(@Param('limit') limit: number, @Param('skip') skip: number, @Param('searchQuery') searchQuery: string) {
+    if (!searchQuery) {
+      searchQuery = '{}';
+    }
+    return this.profileService.findAll(JSON.parse(searchQuery), limit, skip);
   }
 
-  /**
-   * Get profile by id
-   */
+  @ApiOperation({ summary: 'Get a Profile based on its ID' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get(':id')
-  async findOneById(@Param('id') id: string) {
-    return this.profileService.findOneById(id);
+  async findOneById(@Param('id') profileId: string) {
+    return this.profileService.findOneById(profileId);
   }
 
-  /**
-   * Get own profile
-   */
+  @ApiOperation({ summary: 'Update a Profile based on its ID' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Get()
-  async findOne(@Req() request: Request) {
-    return this.profileService.findOneById((request as any).user.profile);
+  @UseGuards(UserIsOwnerGuard)
+  @Patch(':id')
+  async update(
+    @Param('id') profileId: string,
+    @Body() profile: UpdateProfileDto,
+  ) {
+    return this.profileService.updateById(profileId, profile);
   }
 }

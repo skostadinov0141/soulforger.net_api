@@ -3,19 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Profile } from './schemas/profile.schema';
 import { Model } from 'mongoose';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { SearchProfileDto } from './dto/search-profile.dto';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectModel(Profile.name) private profileModel: Model<Profile>,
   ) {}
-
-  async create(): Promise<Profile> {
-    const createdProfile = new this.profileModel();
-    createdProfile.createdAt = new Date();
-    createdProfile.updatedAt = new Date();
-    return createdProfile.save();
-  }
 
   async delete(id: string): Promise<Profile> {
     return this.profileModel.findByIdAndRemove(id);
@@ -30,5 +24,15 @@ export class ProfileService {
 
   async findOneById(id: string): Promise<Profile> {
     return this.profileModel.findById(id);
+  }
+
+  async findAll(
+    searchQuery: SearchProfileDto,
+    limit: number,
+    skip: number,
+  ): Promise<Profile[]> {
+    return this.profileModel
+      .find(searchQuery, null, { limit: limit, skip: skip })
+      .exec();
   }
 }
