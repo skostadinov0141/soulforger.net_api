@@ -7,33 +7,33 @@ export type ProfileDocument = mongoose.HydratedDocument<Profile>;
 
 @Schema()
 export class Profile {
-  _id: string;
-  @Prop()
-  @ApiProperty()
-  displayName: string;
-  @Prop()
-  @ApiProperty()
-  bio: string;
-  @Prop()
-  @ApiProperty()
-  avatarUrl: string;
-  @Prop()
-  @ApiProperty()
-  preferredLanguage: string;
-  @Prop()
-  @ApiProperty()
-  favoriteRulebook: string;
-  @Prop()
-  @ApiProperty()
-  preferredRole: string;
-  @Prop()
-  @ApiProperty()
-  createdAt: Date;
-  @Prop()
-  @ApiProperty()
-  updatedAt: Date;
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  owner: User;
+	_id: string;
+	@Prop()
+	@ApiProperty()
+	displayName: string;
+	@Prop()
+	@ApiProperty()
+	bio: string;
+	@Prop()
+	@ApiProperty()
+	avatarUrl: string;
+	@Prop()
+	@ApiProperty()
+	preferredLanguage: string;
+	@Prop()
+	@ApiProperty()
+	favoriteRulebook: string;
+	@Prop()
+	@ApiProperty()
+	preferredRole: string;
+	@Prop()
+	@ApiProperty()
+	createdAt: Date;
+	@Prop()
+	@ApiProperty()
+	updatedAt: Date;
+	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+	owner: User;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);

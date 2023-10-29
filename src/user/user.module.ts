@@ -7,13 +7,13 @@ import { ProfileModule } from 'src/profile/profile.module';
 import { ProfileSchema } from 'src/profile/schemas/profile.schema';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }]),
-    ProfileModule,
-  ],
-  exports: [UserService],
-  controllers: [UserController],
-  providers: [UserService],
+	imports: [
+		MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+		MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }]),
+		ProfileModule,
+	],
+	exports: [UserService],
+	controllers: [UserController],
+	providers: [UserService],
 })
 export class UserModule {}

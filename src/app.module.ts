@@ -9,17 +9,17 @@ import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
-    MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGO_TESTING_UNAME}:${process.env.MONGO_TESTING_PW}@soulforgerdb.hmyeqw0.mongodb.net/soulforger_testing?retryWrites=true&w=majority`,
-    ),
-    UserModule,
-    AuthModule,
-    ProfileModule,
-    NirveCreatorModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+	imports: [
+		ConfigModule.forRoot({ envFilePath: '.env' }),
+		MongooseModule.forRoot(
+			`mongodb+srv://${process.env.MONGO_TESTING_UNAME}:${process.env.MONGO_TESTING_PW}@soulforgerdb.hmyeqw0.mongodb.net/soulforger_testing?retryWrites=true&w=majority`,
+		),
+		UserModule,
+		AuthModule,
+		ProfileModule,
+		NirveCreatorModule,
+	],
+	controllers: [AppController],
+	providers: [AppService],
 })
 export class AppModule {}

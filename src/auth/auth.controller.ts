@@ -9,19 +9,19 @@ import { Public } from './public.decorator';
 @ApiTags('auth')
 @Controller('v1/auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+	constructor(private authService: AuthService) {}
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post('sign-in')
-  async signIn(@Body() signInDto: SignInDto): Promise<TokenDto> {
-    return this.authService.signIn(signInDto.email, signInDto.password);
-  }
+	@Public()
+	@HttpCode(HttpStatus.OK)
+	@Post('sign-in')
+	async signIn(@Body() signInDto: SignInDto): Promise<TokenDto> {
+		return this.authService.signIn(signInDto.email, signInDto.password);
+	}
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post('refresh')
-  async refreshToken(@Body() signInDto: RefreshTokenDto): Promise<TokenDto> {
-    return this.authService.refresh(signInDto.refresh_token);
-  }
+	@Public()
+	@HttpCode(HttpStatus.OK)
+	@Post('refresh')
+	async refreshToken(@Body() signInDto: RefreshTokenDto): Promise<TokenDto> {
+		return this.authService.refresh(signInDto.refresh_token);
+	}
 }
