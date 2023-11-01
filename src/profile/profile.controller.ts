@@ -5,6 +5,7 @@ import {
 	Param,
 	Patch,
 	Put,
+	Query,
 	Req,
 	UseGuards,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import {
 	ApiBearerAuth,
 	ApiOperation,
 	ApiParam,
+	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -32,15 +34,17 @@ export class ProfileController {
 		summary:
 			'Get all profiles that a certain optional query applies to. Limit and skip can be provided for pagination.',
 	})
-	@ApiParam({ name: 'limit', type: Number, required: false })
-	@ApiParam({ name: 'skip', type: Number, required: false })
-	@ApiParam({ name: 'searchQuery', type: String, required: false })
+	@ApiQuery({ name: 'limit', type: Number, required: false })
+	@ApiQuery({ name: 'skip', type: Number, required: false })
+	@ApiQuery({ name: 'searchQuery', type: String, required: false })
 	@Get()
 	async findOne(
-		@Param('limit') limit: number,
-		@Param('skip') skip: number,
-		@Param('searchQuery') searchQuery: string,
+		@Query('limit') limit: number,
+		@Query('skip') skip: number,
+		@Query('searchQuery') searchQuery: string,
 	) {
+		console.log(JSON.parse(searchQuery));
+		return;
 		if (!searchQuery) {
 			searchQuery = '{}';
 		}
