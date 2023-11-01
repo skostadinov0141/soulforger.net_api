@@ -22,6 +22,8 @@ import { Request } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserIsOwnerGuard } from 'src/own-user/user-is-owner.guard';
 import { Roles } from 'src/auth/auth.decorator';
+import { SearchProfileDto } from './dto/search-profile.dto';
+import { plainToClass } from 'class-transformer';
 
 @ApiTags('Profile')
 @Controller('v1/profile')
@@ -43,11 +45,12 @@ export class ProfileController {
 		@Query('skip') skip: number,
 		@Query('searchQuery') searchQuery: string,
 	) {
-		console.log(JSON.parse(searchQuery));
-		return;
 		if (!searchQuery) {
 			searchQuery = '{}';
 		}
+		let dto: SearchProfileDto = plainToClass(SearchProfileDto, JSON.parse(searchQuery));
+		console.log(dto);
+		return;
 		return this.profileService.findAll(
 			JSON.parse(searchQuery),
 			limit,
