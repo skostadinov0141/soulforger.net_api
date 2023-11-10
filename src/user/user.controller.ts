@@ -50,17 +50,13 @@ export class UserController {
 	@Roles(['admin', 'user'])
 	@ApiQuery({ name: 'limit', type: Number, required: false })
 	@ApiQuery({ name: 'skip', type: Number, required: false })
-	@ApiQuery({ name: 'searchQuery', type: String, required: false })
-	@Get()
+	@Post('search')
 	async findAll(
-		@Query('searchQuery') searchQuery: string,
-		@Query('limit') limit?: number,
-		@Query('skip') skip?: number,
+		@Body() searchObject: SearchUserDto,
+		@Query('limit') limit: number,
+		@Query('skip') skip: number,
 	): Promise<User[]> {
-		if (!searchQuery) {
-			searchQuery = '{}';
-		}
-		return this.userService.findAll(JSON.parse(searchQuery), limit, skip);
+		return this.userService.findAll(searchObject, limit, skip);
 	}
 
 	@ApiBearerAuth()

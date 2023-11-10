@@ -14,6 +14,7 @@ import {
 import { NirveCreatorService } from './nirve-creator.service';
 import {
 	ApiBearerAuth,
+	ApiBody,
 	ApiOperation,
 	ApiParam,
 	ApiQuery,
@@ -22,6 +23,7 @@ import {
 import { NirveCreateDto } from './dto/nirve-create.dto';
 import { Roles } from 'src/auth/auth.decorator';
 import { NirveCommonDto } from './dto/nirve-common.dto';
+import { NirveSearchDto } from './dto/nirve-search.dto';
 
 @ApiTags('Nirve Creator')
 @Controller('v1/nirve-creator')
@@ -57,9 +59,9 @@ export class NirveCreatorController {
 
 	@ApiOperation({
 		summary:
-			'Get multiple Nirve objects of the provided type, based on a search query with limit and skip for pagination. ',
+			'Search nirve objects based on a query object and/or limit and skip, with given type.',
 	})
-	@Get(':type')
+	@Post(':type/search')
 	@ApiBearerAuth()
 	@Roles(['creator:nirve', 'admin', 'dev'])
 	@ApiParam({
@@ -77,22 +79,19 @@ export class NirveCreatorController {
 		],
 		required: true,
 	})
-	@ApiQuery({ name: 'searchQuery', type: String, required: false })
 	@ApiQuery({ name: 'limit', type: Number, required: false })
 	@ApiQuery({ name: 'skip', type: Number, required: false })
+	@ApiBody({ type: NirveSearchDto })
 	async search(
-		@Query('searchQuery') searchQuery: string,
+		@Body() searchObject: NirveSearchDto,
 		@Query('limit') limit: number,
 		@Query('skip') skip: number,
 		@Param('type') type: string,
 		@Req() req: any,
 	): Promise<NirveCommonDto> {
-		if (!searchQuery) {
-			searchQuery = '{}';
-		}
 		return this.nirveCreatorService.findAll(
 			type,
-			JSON.parse(searchQuery),
+			searchObject,
 			limit,
 			skip,
 		);

@@ -4,14 +4,17 @@ import {
 	Get,
 	Param,
 	Patch,
+	Post,
 	Put,
 	Query,
 	Req,
+	Search,
 	UseGuards,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import {
 	ApiBearerAuth,
+	ApiBody,
 	ApiOperation,
 	ApiParam,
 	ApiQuery,
@@ -38,21 +41,16 @@ export class ProfileController {
 	})
 	@ApiQuery({ name: 'limit', type: Number, required: false })
 	@ApiQuery({ name: 'skip', type: Number, required: false })
-	@ApiQuery({ name: 'searchQuery', type: String, required: false })
-	@Get()
+	@ApiBody({ type: SearchProfileDto })
+	@Post('search')
 	async findOne(
 		@Query('limit') limit: number,
 		@Query('skip') skip: number,
-		@Query('searchQuery') searchQuery: string,
+		@Body() searchQuery: SearchProfileDto,
 	) {
-		if (!searchQuery) {
-			searchQuery = '{}';
-		}
-		let dto: SearchProfileDto = plainToClass(SearchProfileDto, JSON.parse(searchQuery));
-		console.log(dto);
-		return;
+		console.log(searchQuery);
 		return this.profileService.findAll(
-			JSON.parse(searchQuery),
+			searchQuery,
 			limit,
 			skip,
 		);
