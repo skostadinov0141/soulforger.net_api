@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
+import { NirveTagModule } from './nirve-tag/nirve-tag.module';
 
 @Module({
 	imports: [
@@ -18,6 +19,7 @@ import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 		AuthModule,
 		ProfileModule,
 		NirveCreatorModule,
+		NirveTagModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

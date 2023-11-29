@@ -10,6 +10,6 @@ export class NirveSearchDto {
 	createdAt: any;
 	updatedAt: any;
 	creationPhase: any;
-    creatorNotes: string;
+	creatorNotes: string;
 	type: NirveTypes;
 }

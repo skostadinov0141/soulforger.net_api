@@ -22,8 +22,7 @@ export class NirveCreatorService {
 		const model = new this.nirveCommonModel(dto);
 		model.createdAt = new Date();
 		model.updatedAt = new Date();
-		model.createdBy =
-			await this.userModel.findById<User>(creatorId);
+		model.createdBy = await this.userModel.findById<User>(creatorId);
 		model.creationPhase = 1;
 		await model.save();
 		return this.nirveCommonModel.findById(model._id);

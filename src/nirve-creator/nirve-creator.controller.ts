@@ -57,11 +57,7 @@ export class NirveCreatorController {
 		@Query('skip') skip: number,
 		@Req() req: any,
 	): Promise<NirvePhase1Common[]> {
-		return this.nirveCreatorService.findAll(
-			searchObject,
-			limit,
-			skip,
-		);
+		return this.nirveCreatorService.findAll(searchObject, limit, skip);
 	}
 
 	@ApiOperation({ summary: 'Get a single Nirve object based on its ID.' })
@@ -69,9 +65,7 @@ export class NirveCreatorController {
 	@ApiBearerAuth()
 	@Roles(['creator:nirve', 'admin', 'dev'])
 	@ApiParam({ name: 'id', type: String })
-	async getOneById(
-		@Param('id') id: string,
-	): Promise<NirvePhase1Common> {
+	async getOneById(@Param('id') id: string): Promise<NirvePhase1Common> {
 		return this.nirveCreatorService.getOneById(id);
 	}
 
@@ -96,9 +90,7 @@ export class NirveCreatorController {
 	@ApiBearerAuth()
 	@Roles(['creator:nirve', 'admin', 'dev'])
 	@ApiParam({ name: 'id', type: String })
-	async deleteOneById(
-		@Param('id') id: string,
-	): Promise<NirvePhase1Common> {
+	async deleteOneById(@Param('id') id: string): Promise<NirvePhase1Common> {
 		return this.nirveCreatorService.deleteOneById(id);
 	}
 }
