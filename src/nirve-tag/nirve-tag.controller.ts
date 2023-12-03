@@ -14,7 +14,6 @@ import { CreateNirveTagDto } from './dto/create-nirve-tag.dto';
 import { UpdateNirveTagDto } from './dto/update-nirve-tag.dto';
 import {
 	ApiBearerAuth,
-	ApiBody,
 	ApiOperation,
 	ApiQuery,
 	ApiTags,
@@ -49,12 +48,6 @@ export class NirveTagController {
 		@Query('skip') skip: number,
 	) {
 		return this.nirveTagService.search(searchObject, limit, skip);
-	}
-
-	@Get()
-	@ApiOperation({ summary: 'Get all Nirve Tags.' })
-	findAll() {
-		return this.nirveTagService.findAll();
 	}
 
 	@Get(':id')

@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { NirveTypes } from './nirve-create.dto';
 
 export class NirveSearchDto {
@@ -12,4 +11,5 @@ export class NirveSearchDto {
 	creationPhase: any;
 	creatorNotes: string;
 	type: NirveTypes;
+	tags: any;
 }

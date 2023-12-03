@@ -22,4 +22,8 @@ export class NirveCommonDto {
 	creatorNotes: string;
 	@ApiProperty()
 	type: NirveTypes;
+	@ApiProperty()
+	tags: string[];
+	@ApiProperty()
+	groups: string[];
 }

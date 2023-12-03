@@ -27,10 +27,6 @@ export class NirveTagService {
 		return this.nirveTagModel.findById(tag._id);
 	}
 
-	findAll() {
-		return this.nirveTagModel.find();
-	}
-
 	findOne(id: string) {
 		return this.nirveTagModel.findById(id);
 	}

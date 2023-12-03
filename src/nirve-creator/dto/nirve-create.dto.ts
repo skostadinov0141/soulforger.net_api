@@ -7,6 +7,8 @@ export class NirveCreateDto {
 	updatedAt: Date;
 	creatorNotes: string;
 	type: NirveTypes;
+	tags: string[];
+	groups: string[];
 }
 
 export type NirveTypes =
