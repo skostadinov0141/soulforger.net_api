@@ -33,7 +33,6 @@ export class UserService {
 		createdUser.roles = ['user'];
 
 		createdUser.profile = createdProfile;
-		createdProfile.owner = createdUser;
 
 		await createdProfile.save();
 		await createdUser.save();

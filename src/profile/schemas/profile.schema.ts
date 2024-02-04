@@ -32,8 +32,6 @@ export class Profile {
 	@Prop()
 	@ApiProperty()
 	updatedAt: Date;
-	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-	owner: User;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
