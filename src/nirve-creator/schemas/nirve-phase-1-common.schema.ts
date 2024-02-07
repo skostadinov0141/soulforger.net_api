@@ -8,7 +8,7 @@ import { NirveGroup } from '../../nirve-group/schemas/nirve-group.schema';
 export type NirveBendingSkillDocument =
 	mongoose.HydratedDocument<NirvePhase1Common>;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class NirvePhase1Common {
 	_id: string;
 	@Prop()

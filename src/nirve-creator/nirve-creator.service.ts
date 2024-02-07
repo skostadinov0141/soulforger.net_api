@@ -23,8 +23,6 @@ export class NirveCreatorService {
 		creatorId: string,
 	): Promise<NirvePhase1Common> {
 		const model = new this.nirveCommonModel(dto);
-		model.createdAt = new Date();
-		model.updatedAt = new Date();
 		model.createdBy = await this.userModel.findById<User>(creatorId);
 		model.creationPhase = 1;
 		model.tags = await this.nirveTagModel.find({
@@ -41,7 +39,6 @@ export class NirveCreatorService {
 		id: string,
 		dto: NirveCreateDto,
 	): Promise<NirvePhase1Common> {
-		dto.updatedAt = new Date();
 		dto.tags = await this.nirveTagModel.find({
 			_id: { $in: dto.tags },
 		});

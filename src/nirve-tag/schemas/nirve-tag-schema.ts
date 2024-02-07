@@ -5,7 +5,7 @@ import { User } from 'src/user/schemas/user.schema';
 
 export type NirveTagDocument = mongoose.HydratedDocument<NirveTag>;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class NirveTag {
 	_id: string;
 	@Prop()

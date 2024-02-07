@@ -20,8 +20,6 @@ export class NirveTagService {
 	): Promise<NirveTag> {
 		const tag = new this.nirveTagModel();
 		tag.tag = createNirveTagDto.tag;
-		tag.createdAt = new Date();
-		tag.updatedAt = new Date();
 		tag.createdBy = await this.userModel.findById(creatorId);
 		await tag.save();
 		return this.nirveTagModel.findById(tag._id);
@@ -32,7 +30,6 @@ export class NirveTagService {
 	}
 
 	async update(id: string, updateNirveTagDto: UpdateNirveTagDto) {
-		updateNirveTagDto.updatedAt = new Date();
 		await this.nirveTagModel.updateOne({ _id: id }, updateNirveTagDto);
 		return this.nirveTagModel.findById(id);
 	}

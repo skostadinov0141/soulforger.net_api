@@ -5,7 +5,7 @@ import { Profile } from 'src/profile/schemas/profile.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class User {
 	_id: string;
 	@ApiProperty()

@@ -16,7 +16,6 @@ export class ProfileService {
 	}
 
 	async updateById(id: string, profile: UpdateProfileDto): Promise<Profile> {
-		profile.updatedAt = new Date();
 		console.log(profile);
 		console.log(id);
 		return this.profileModel.findByIdAndUpdate(id, profile, { new: true });

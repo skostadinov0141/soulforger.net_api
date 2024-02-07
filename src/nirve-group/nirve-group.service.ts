@@ -22,8 +22,6 @@ export class NirveGroupService {
 		const group = new this.nirveGroupModel();
 		group.name = dto.name;
 		group.description = dto.description;
-		group.createdAt = new Date();
-		group.updatedAt = new Date();
 		group.createdBy = await this.userModel.findById(creatorId);
 		await group.save();
 		return this.nirveGroupModel.findById(group._id);
@@ -37,7 +35,6 @@ export class NirveGroupService {
 		id: string,
 		dto: UpdateNirveGroupDto,
 	): Promise<NirveGroup> {
-		dto.updatedAt = new Date();
 		return this.nirveGroupModel.findByIdAndUpdate(id, dto, { new: true });
 	}
 
