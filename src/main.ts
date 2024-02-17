@@ -1,9 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import * as basicAuth from 'express-basic-auth';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+
+	const configService = app.get(ConfigService);
+
+	app.use(
+		'/docs*',
+		basicAuth({
+			challenge: true,
+			users: { doc: configService.get<string>('SWAGGER_PW') },
+		}),
+	);
 
 	app.enableCors({
 		origin: ['http://localhost:3001'],
@@ -20,4 +32,5 @@ async function bootstrap() {
 
 	await app.listen(3000);
 }
+
 bootstrap();

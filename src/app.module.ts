@@ -9,12 +9,19 @@ import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 import { NirveTagModule } from './nirve-tag/nirve-tag.module';
 import { NirveGroupModule } from './nirve-group/nirve-group.module';
+import * as process from 'process';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ envFilePath: '.env' }),
 		MongooseModule.forRoot(
-			`mongodb+srv://${process.env.MONGO_TESTING_UNAME}:${process.env.MONGO_TESTING_PW}@soulforgerdb.hmyeqw0.mongodb.net/soulforger_testing?retryWrites=true&w=majority`,
+			`${
+				process.env.NODE_ENV === 'development'
+					? 'mongodb'
+					: 'mongodb+srv'
+			}://${process.env.DB_ADMIN_UNAME}:${process.env.DB_ADMIN_PW}@${
+				process.env.DB_IP
+			}/soulforger?retryWrites=true&w=majority&authSource=admin`,
 		),
 		UserModule,
 		AuthModule,

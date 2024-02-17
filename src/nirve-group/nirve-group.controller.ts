@@ -2,7 +2,8 @@ import {
 	Body,
 	Controller,
 	Delete,
-	Get, Param,
+	Get,
+	Param,
 	Patch,
 	Post,
 	Query,
@@ -54,7 +55,10 @@ export class NirveGroupController {
 
 	@Patch(':id')
 	@ApiOperation({ summary: 'Update a Nirve Group by ID.' })
-	async updateById(@Param('id') id: string, @Body() dto: UpdateNirveGroupDto) {
+	async updateById(
+		@Param('id') id: string,
+		@Body() dto: UpdateNirveGroupDto,
+	) {
 		return this.nirveGroupService.updateById(id, dto);
 	}
 
