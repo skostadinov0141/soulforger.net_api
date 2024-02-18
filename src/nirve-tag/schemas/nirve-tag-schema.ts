@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
+import {NirvePhase1Common, NirvePhase1CommonSchema} from "../../nirve-creator/schemas/nirve-phase-1-common.schema";
 
 export type NirveTagDocument = mongoose.HydratedDocument<NirveTag>;
 
@@ -23,3 +24,9 @@ export class NirveTag {
 }
 
 export const NirveTagSchema = SchemaFactory.createForClass(NirveTag);
+
+// TODO: Add pre-save hooks to update the updatedAt field https://github.com/nestjs/mongoose/issues/7
+// NirveTagSchema.pre(['deleteOne', "deleteMany"], function (this,next) {
+// 	const tag = this;
+// 	NirvePhase1Common
+// });
