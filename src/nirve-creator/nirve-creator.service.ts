@@ -15,7 +15,8 @@ export class NirveCreatorService {
 		private nirveCommonModel: Model<NirvePhase1Common>,
 		@InjectModel(User.name) private userModel: Model<User>,
 		@InjectModel(NirveTag.name) private nirveTagModel: Model<NirveTag>,
-		@InjectModel(NirveGroup.name) private nirveGroupModel: Model<NirveGroup>,
+		@InjectModel(NirveGroup.name)
+		private nirveGroupModel: Model<NirveGroup>,
 	) {}
 
 	async create(

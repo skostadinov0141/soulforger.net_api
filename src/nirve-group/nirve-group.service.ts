@@ -38,8 +38,8 @@ export class NirveGroupService {
 		return this.nirveGroupModel.findByIdAndUpdate(id, dto, { new: true });
 	}
 
-	async deleteById(id: string): Promise<NirveGroup> {
-		return this.nirveGroupModel.findByIdAndDelete(id);
+	async deleteById(id: string) {
+		return this.nirveGroupModel.deleteOne({ _id: id });
 	}
 
 	async search(

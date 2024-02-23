@@ -14,6 +14,7 @@ import {
 import {
 	NirveGroup,
 	NirveGroupSchema,
+	NirveGroupSchemaFactory,
 } from '../nirve-group/schemas/nirve-group.schema';
 
 @Module({
@@ -24,12 +25,16 @@ import {
 				useFactory: NirveTagSchemaFactory,
 				inject: [getModelToken(NirvePhase1Common.name)],
 			},
+			{
+				name: NirveGroup.name,
+				useFactory: NirveGroupSchemaFactory,
+				inject: [getModelToken(NirvePhase1Common.name)],
+			},
 			{ name: 'User', useFactory: () => UserSchema },
 			{
 				name: 'NirvePhase1Common',
 				useFactory: () => NirvePhase1CommonSchema,
 			},
-			{ name: NirveGroup.name, useFactory: () => NirveGroupSchema },
 		]),
 	],
 	controllers: [NirveCreatorController],
