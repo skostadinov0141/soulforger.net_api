@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
 import { NirveCreatorController } from './nirve-creator.controller';
 import { NirveCreatorService } from './nirve-creator.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { NirvePhase1CommonSchema } from './schemas/nirve-phase-1-common.schema';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+import {
+	NirvePhase1Common,
+	NirvePhase1CommonSchema,
+} from './schemas/nirve-phase-1-common.schema';
 import { UserSchema } from 'src/user/schemas/user.schema';
-import { NirveTagSchema } from '../nirve-tag/schemas/nirve-tag-schema';
+import {
+	NirveTagSchema,
+	NirveTagSchemaFactory,
+} from '../nirve-tag/schemas/nirve-tag-schema';
 import {
 	NirveGroup,
 	NirveGroupSchema,
@@ -12,15 +18,18 @@ import {
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([
-			{ name: 'NirvePhase1Common', schema: NirvePhase1CommonSchema },
-		]),
-		MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-		MongooseModule.forFeature([
-			{ name: 'NirveTag', schema: NirveTagSchema },
-		]),
-		MongooseModule.forFeature([
-			{ name: NirveGroup.name, schema: NirveGroupSchema },
+		MongooseModule.forFeatureAsync([
+			{
+				name: 'NirveTag',
+				useFactory: NirveTagSchemaFactory,
+				inject: [getModelToken(NirvePhase1Common.name)],
+			},
+			{ name: 'User', useFactory: () => UserSchema },
+			{
+				name: 'NirvePhase1Common',
+				useFactory: () => NirvePhase1CommonSchema,
+			},
+			{ name: NirveGroup.name, useFactory: () => NirveGroupSchema },
 		]),
 	],
 	controllers: [NirveCreatorController],

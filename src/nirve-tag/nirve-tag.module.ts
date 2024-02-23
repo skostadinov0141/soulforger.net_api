@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { NirveTagService } from './nirve-tag.service';
 import { NirveTagController } from './nirve-tag.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { NirveTag, NirveTagSchema } from './schemas/nirve-tag-schema';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+import {
+	NirveTag,
+	NirveTagSchema,
+	NirveTagSchemaFactory,
+} from './schemas/nirve-tag-schema';
 import { UserSchema } from '../user/schemas/user.schema';
 import {
 	NirvePhase1Common,
@@ -11,16 +15,18 @@ import {
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([
+		MongooseModule.forFeatureAsync([
 			{
 				name: NirveTag.name,
-				schema: NirveTagSchema,
+				useFactory: NirveTagSchemaFactory,
+				inject: [getModelToken(NirvePhase1Common.name)],
 			},
+			{
+				name: 'NirvePhase1Common',
+				useFactory: () => NirvePhase1CommonSchema,
+			},
+			{ name: 'User', useFactory: () => UserSchema },
 		]),
-		MongooseModule.forFeature([
-			{ name: 'NirvePhase1Common', schema: NirvePhase1CommonSchema },
-		]),
-		MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
 	],
 	controllers: [NirveTagController],
 	providers: [NirveTagService],
