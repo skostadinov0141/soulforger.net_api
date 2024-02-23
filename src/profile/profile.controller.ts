@@ -49,11 +49,7 @@ export class ProfileController {
 		@Body() searchQuery: SearchProfileDto,
 	) {
 		console.log(searchQuery);
-		return this.profileService.findAll(
-			searchQuery,
-			limit,
-			skip,
-		);
+		return this.profileService.findAll(searchQuery, limit, skip);
 	}
 
 	@ApiOperation({ summary: 'Get a Profile based on its ID' })

@@ -1,122 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel, ModelDefinition } from '@nestjs/mongoose';
-import { NirveBendingSkill } from './schemas/nirve-bending-skill.schema';
-import { NirveCharacterClass } from './schemas/nirve-character-class.schema';
-import { NirveDisadvantage } from './schemas/nirve-disadvantage.schema';
-import { NirveItem } from './schemas/nirve-item.schema';
-import { NirveRace } from './schemas/nirve-race.schema';
-import { NirveReligion } from './schemas/nirve-religion.schema';
-import { NirveSkill } from './schemas/nirve-skill.schema';
-import { NirveSpell } from './schemas/nirve-spell.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import { NirveCreateDto } from './dto/nirve-create.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Model } from 'mongoose';
-import { NirveCommonDto } from './dto/nirve-common.dto';
+import { NirvePhase1Common } from './schemas/nirve-phase-1-common.schema';
+import { NirveSearchDto } from './dto/nirve-search.dto';
+import { NirveTag } from '../nirve-tag/schemas/nirve-tag-schema';
+import { NirveGroup } from '../nirve-group/schemas/nirve-group.schema';
 
 @Injectable()
 export class NirveCreatorService {
 	constructor(
-		@InjectModel(NirveBendingSkill.name)
-		private nirveBendingSkillModel: Model<NirveBendingSkill>,
-		@InjectModel(NirveCharacterClass.name)
-		private nirveCharacterClassModel: Model<NirveCharacterClass>,
-		@InjectModel(NirveDisadvantage.name)
-		private nirveDisadvantageModel: Model<NirveDisadvantage>,
-		@InjectModel(NirveItem.name) private nirveItemModel: Model<NirveItem>,
-		@InjectModel(NirveRace.name) private nirveRaceModel: Model<NirveRace>,
-		@InjectModel(NirveReligion.name)
-		private nirveReligionModel: Model<NirveReligion>,
-		@InjectModel(NirveSkill.name)
-		private nirveSkillModel: Model<NirveSkill>,
-		@InjectModel(NirveSpell.name)
-		private nirveSpellModel: Model<NirveSpell>,
+		@InjectModel(NirvePhase1Common.name)
+		private nirveCommonModel: Model<NirvePhase1Common>,
 		@InjectModel(User.name) private userModel: Model<User>,
+		@InjectModel(NirveTag.name) private nirveTagModel: Model<NirveTag>,
+		@InjectModel(NirveGroup.name)
+		private nirveGroupModel: Model<NirveGroup>,
 	) {}
 
 	async create(
 		dto: NirveCreateDto,
-		type: string,
 		creatorId: string,
-	): Promise<NirveCommonDto> {
-		const creationMap = {
-			'bending-skill': new this.nirveBendingSkillModel(dto),
-			'character-class': new this.nirveCharacterClassModel(dto),
-			disadvantage: new this.nirveDisadvantageModel(dto),
-			item: new this.nirveItemModel(dto),
-			race: new this.nirveRaceModel(dto),
-			religion: new this.nirveReligionModel(dto),
-			skill: new this.nirveSkillModel(dto),
-			spell: new this.nirveSpellModel(dto),
-		};
-		creationMap[type].createdAt = new Date();
-		creationMap[type].updatedAt = new Date();
-		creationMap[type].createdBy =
-			await this.userModel.findById<User>(creatorId);
-		creationMap[type].creationPhase = 1;
-		await creationMap[type].save();
-		const modelMap = {
-			'bending-skill': this.nirveBendingSkillModel,
-			'character-class': this.nirveCharacterClassModel,
-			disadvantage: this.nirveDisadvantageModel,
-			item: this.nirveItemModel,
-			race: this.nirveRaceModel,
-			religion: this.nirveReligionModel,
-			skill: this.nirveSkillModel,
-			spell: this.nirveSpellModel,
-		};
-		return modelMap[type].findById(creationMap[type]._id);
+	): Promise<NirvePhase1Common> {
+		const model = new this.nirveCommonModel(dto);
+		model.createdBy = await this.userModel.findById<User>(creatorId);
+		model.creationPhase = 1;
+		model.tags = await this.nirveTagModel.find({
+			_id: { $in: dto.tags },
+		});
+		model.groups = await this.nirveGroupModel.find({
+			_id: { $in: dto.groups },
+		});
+		await model.save();
+		return this.nirveCommonModel.findById(model._id);
 	}
 
 	async updateOneById(
 		id: string,
 		dto: NirveCreateDto,
-		type: string,
-	): Promise<NirveCommonDto> {
-		const updateMap = {
-			'bending-skill': this.nirveBendingSkillModel,
-			'character-class': this.nirveCharacterClassModel,
-			disadvantage: this.nirveDisadvantageModel,
-			item: this.nirveItemModel,
-			race: this.nirveRaceModel,
-			religion: this.nirveReligionModel,
-			skill: this.nirveSkillModel,
-			spell: this.nirveSpellModel,
-		};
-		dto.updatedAt = new Date();
-		return updateMap[type].findByIdAndUpdate(id, dto, { new: true });
+	): Promise<NirvePhase1Common> {
+		dto.tags = await this.nirveTagModel.find({
+			_id: { $in: dto.tags },
+		});
+		return this.nirveCommonModel.findByIdAndUpdate(id, dto, { new: true });
 	}
 
-	async deleteOneById(id: string, type: string): Promise<NirveCommonDto> {
-		const updateMap = {
-			'bending-skill': this.nirveBendingSkillModel,
-			'character-class': this.nirveCharacterClassModel,
-			disadvantage: this.nirveDisadvantageModel,
-			item: this.nirveItemModel,
-			race: this.nirveRaceModel,
-			religion: this.nirveReligionModel,
-			skill: this.nirveSkillModel,
-			spell: this.nirveSpellModel,
-		};
-		return updateMap[type].findByIdAndRemove(id);
+	async deleteOneById(id: string): Promise<NirvePhase1Common> {
+		return this.nirveCommonModel.findByIdAndRemove(id);
 	}
 
 	async findAll(
-		type: string,
-		searchQuery: NirveCommonDto,
+		searchQuery: NirveSearchDto,
 		limit: number,
 		skip: number,
-	): Promise<NirveCommonDto> {
-		const updateMap = {
-			'bending-skill': this.nirveBendingSkillModel,
-			'character-class': this.nirveCharacterClassModel,
-			disadvantage: this.nirveDisadvantageModel,
-			item: this.nirveItemModel,
-			race: this.nirveRaceModel,
-			religion: this.nirveReligionModel,
-			skill: this.nirveSkillModel,
-			spell: this.nirveSpellModel,
-		};
-		return updateMap[type]
+	): Promise<NirvePhase1Common[]> {
+		return this.nirveCommonModel
 			.find(searchQuery, null, {
 				limit: limit,
 				skip: skip,
@@ -124,17 +63,9 @@ export class NirveCreatorService {
 			.exec();
 	}
 
-	async getOneById(id: string, type: string): Promise<NirveCommonDto> {
-		const updateMap = {
-			'bending-skill': this.nirveBendingSkillModel,
-			'character-class': this.nirveCharacterClassModel,
-			disadvantage: this.nirveDisadvantageModel,
-			item: this.nirveItemModel,
-			race: this.nirveRaceModel,
-			religion: this.nirveReligionModel,
-			skill: this.nirveSkillModel,
-			spell: this.nirveSpellModel,
-		};
-		return updateMap[type].findById(id);
+	async getOneById(id: string): Promise<NirvePhase1Common> {
+		return this.nirveCommonModel.findById(id, null, {
+			populate: ['tags', 'groups'],
+		});
 	}
 }

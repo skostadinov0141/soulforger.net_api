@@ -20,20 +20,14 @@ export class UserService {
 		const createdUser = new this.userModel(createUserDto);
 		const createdProfile = new this.profileModel();
 
-		createdProfile.createdAt = new Date();
-		createdProfile.updatedAt = new Date();
-
 		const salt = await bcrypt.genSalt(10);
 		createdUser.passwordHash = await bcrypt.hash(
 			createUserDto.password,
 			salt,
 		);
-		createdUser.createdAt = new Date();
-		createdUser.updatedAt = new Date();
 		createdUser.roles = ['user'];
 
 		createdUser.profile = createdProfile;
-		createdProfile.owner = createdUser;
 
 		await createdProfile.save();
 		await createdUser.save();
