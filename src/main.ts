@@ -22,7 +22,7 @@ async function bootstrap() {
 			if (configService.get<string>('NODE_ENV') === 'development') {
 				return ['http://localhost:3001'];
 			}
-			return ['https://soulforger.net'];
+			return ['https://soulforger.net', 'https://api.soulforger.net'];
 		},
 	});
 
