@@ -38,4 +38,4 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/ip_update.sh ./
 
 # Start the server using the production build
-CMD [ "./ip_update.sh", "node", "./dist/main.js" ]
+CMD [ "sh", "./ip_update.sh", "node", "./dist/main.js" ]
