@@ -46,5 +46,8 @@ RUN apk add --no-cache --upgrade bash
 # Install curl
 RUN apk add --no-cache --upgrade curl
 
+# Install jq
+RUN apk add --no-cache --upgrade jq
+
 # Start the server using the production build
 CMD [ "bash", "./ip_update.sh", "node", "./dist/main.js" ]
