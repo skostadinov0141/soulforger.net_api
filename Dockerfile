@@ -37,5 +37,11 @@ COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/ip_update.sh ./
 
+# Give execution privs
+RUN chmod +x ip_update.sh
+
+# Install bash
+RUN apk add --no-cache --upgrade bash
+
 # Start the server using the production build
-CMD [ "sh", "./ip_update.sh", "node", "./dist/main.js" ]
+CMD [ "bash", "./ip_update.sh", "node", "./dist/main.js" ]
