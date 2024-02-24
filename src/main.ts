@@ -37,6 +37,9 @@ async function bootstrap() {
 
 	await app.listen(
 		configService.get<string>('NODE_ENV') === 'development' ? 3000 : 8080,
+		configService.get<string>('NODE_ENV') === 'development'
+			? 'localhost'
+			: '0.0.0.0',
 	);
 }
 
