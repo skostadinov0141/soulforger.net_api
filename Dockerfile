@@ -43,5 +43,8 @@ RUN chmod +x ip_update.sh
 # Install bash
 RUN apk add --no-cache --upgrade bash
 
+# Install curl
+RUN apk add --no-cache --upgrade curl
+
 # Start the server using the production build
 CMD [ "bash", "./ip_update.sh", "node", "./dist/main.js" ]
