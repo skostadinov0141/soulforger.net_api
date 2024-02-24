@@ -70,7 +70,7 @@ whitelist_service_ip() {
     echo "change comment format or service name then retry. exiting to avoid mongo API failure"
     exit 1
   fi
-  
+
   echo "whitelisting service IP [$current_service_ip] with comment value: \"$comment\""
 
   response=$(make_mongo_api_request \
@@ -94,7 +94,7 @@ whitelist_service_ip() {
     echo "whitelist request successful"
     echo "waiting 60s for whitelist to propagate to cluster"
     sleep 60
-  fi 
+  fi
 }
 
 delete_previous_service_ip() {
@@ -117,7 +117,7 @@ set_mongo_whitelist_for_service_ip() {
     whitelist_service_ip "$current_service_ip"
   elif [[ "$current_service_ip" == "$previous_service_ip" ]]; then
     echo "service [$SERVICE_NAME] IP has not changed"
-  else  
+  else
     echo "service [$SERVICE_NAME] IP has changed from [$previous_service_ip] to [$current_service_ip]"
 
     delete_previous_service_ip "$previous_service_ip"
