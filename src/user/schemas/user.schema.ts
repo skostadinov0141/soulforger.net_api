@@ -26,6 +26,7 @@ export class User {
 	@ApiProperty()
 	@Prop()
 	updatedAt: Date;
+	@ApiProperty({type: () => Profile})
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' })
 	profile: Profile;
 }

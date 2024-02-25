@@ -29,6 +29,7 @@ import { SearchUserDto } from './dto/search-users.dto';
 import { OwnUserGuard } from 'src/own-user/own-user.guard';
 import { Roles } from 'src/auth/auth.decorator';
 import { Public } from 'src/auth/public.decorator';
+import {Profile} from "../profile/schemas/profile.schema";
 
 @ApiTags('user')
 @Controller('v1/user')
@@ -89,5 +90,14 @@ export class UserController {
 	@ApiParam({ name: 'id', type: String })
 	async deleteById(@Param('id') id: string): Promise<User> {
 		return this.userService.deleteOneById(id);
+	}
+
+	@ApiBearerAuth()
+	@ApiOperation({ summary: "Get a user's profile based on the user's ID" })
+	@Roles(['admin', 'user'])
+	@Get(':id/profile')
+	@ApiParam({ name: 'id', type: String })
+	async getProfile(@Param('id') id: string): Promise<Profile> {
+		return this.userService.getUserProfile(id);
 	}
 }

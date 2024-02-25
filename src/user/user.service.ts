@@ -73,4 +73,10 @@ export class UserService {
 			)
 			.exec();
 	}
+
+	async getUserProfile(id: string): Promise<Profile> {
+		const user = await this.userModel.findById(id);
+		if (!user) throw new Error('User not found');
+		return this.profileModel.findById(user.profile._id);
+	}
 }

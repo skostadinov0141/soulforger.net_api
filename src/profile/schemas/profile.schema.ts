@@ -8,6 +8,9 @@ export type ProfileDocument = mongoose.HydratedDocument<Profile>;
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class Profile {
 	_id: string;
+	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+	@ApiProperty({type: () => User})
+	owner: User;
 	@Prop()
 	@ApiProperty()
 	displayName: string;
