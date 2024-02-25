@@ -35,21 +35,7 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('docs', app, document);
 
-	await app.listen(
-		configService.get<string>('NODE_ENV') === 'development' ? 3000 : 8080,
-		configService.get<string>('NODE_ENV') === 'development'
-			? 'localhost'
-			: '0.0.0.0',
-		() => {
-			console.log(
-				`Server is running on ${
-					configService.get<string>('NODE_ENV') === 'development'
-						? 'localhost:3000'
-						: '0.0.0.0:8080'
-				}`,
-			);
-		},
-	);
+	await app.listen(configService.get<string>('NODE_ENV') === 'development' ? 3000 : 8080);
 }
 
 bootstrap();
