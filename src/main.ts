@@ -17,14 +17,14 @@ async function bootstrap() {
 		}),
 	);
 
-	app.enableCors({
-		origin: (): string[] => {
-			if (configService.get<string>('NODE_ENV') === 'development') {
-				return ['http://localhost:3001'];
-			}
-			return ['https://soulforger.net', 'https://api.soulforger.net'];
-		},
-	});
+	// app.enableCors({
+	// 	origin: (): string[] => {
+	// 		if (configService.get<string>('NODE_ENV') === 'development') {
+	// 			return ['http://localhost:3001'];
+	// 		}
+	// 		return ['https://soulforger.net', 'https://api.soulforger.net'];
+	// 	},
+	// });
 
 	const config = new DocumentBuilder()
 		.addBearerAuth()
