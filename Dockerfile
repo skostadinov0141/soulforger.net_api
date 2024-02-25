@@ -49,5 +49,7 @@ RUN apk add --no-cache --upgrade curl
 # Install jq
 RUN apk add --no-cache --upgrade jq
 
+EXPOSE 8080
+
 # Start the server using the production build
 CMD [ "bash", "./ip_update.sh", "node", "./dist/main.js" ]
