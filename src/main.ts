@@ -40,6 +40,15 @@ async function bootstrap() {
 		configService.get<string>('NODE_ENV') === 'development'
 			? 'localhost'
 			: '0.0.0.0',
+		() => {
+			console.log(
+				`Server is running on ${
+					configService.get<string>('NODE_ENV') === 'development'
+						? 'localhost:3000'
+						: '0.0.0.0:8080'
+				}`,
+			);
+		},
 	);
 }
 
