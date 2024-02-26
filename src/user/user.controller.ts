@@ -6,24 +6,19 @@ import {
 	Param,
 	Patch,
 	Post,
-	Put,
 	Query,
-	Req,
 	UseGuards,
-	UseInterceptors,
 } from '@nestjs/common';
 import {
 	ApiBearerAuth,
 	ApiOperation,
 	ApiParam,
-	ApiProperty,
 	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
-import { Request } from 'express';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { SearchUserDto } from './dto/search-users.dto';
 import { OwnUserGuard } from 'src/own-user/own-user.guard';
