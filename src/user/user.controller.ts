@@ -24,7 +24,7 @@ import { SearchUserDto } from './dto/search-users.dto';
 import { OwnUserGuard } from 'src/own-user/own-user.guard';
 import { Roles } from 'src/auth/auth.decorator';
 import { Public } from 'src/auth/public.decorator';
-import {Profile} from "../profile/schemas/profile.schema";
+import { Profile } from '../profile/schemas/profile.schema';
 
 @ApiTags('user')
 @Controller('v1/user')

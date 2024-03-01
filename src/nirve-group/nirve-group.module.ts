@@ -5,7 +5,6 @@ import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../user/schemas/user.schema';
 import {
 	NirveGroup,
-	NirveGroupSchema,
 	NirveGroupSchemaFactory,
 } from './schemas/nirve-group.schema';
 import {

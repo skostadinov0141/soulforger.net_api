@@ -16,7 +16,6 @@ import {
 	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserIsOwnerGuard } from 'src/own-user/user-is-owner.guard';
 import { SearchProfileDto } from './dto/search-profile.dto';

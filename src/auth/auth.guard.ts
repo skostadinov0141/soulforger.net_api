@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { TokenDto } from './dto/token.dto';
 import { Reflector } from '@nestjs/core';
 import { Roles } from './auth.decorator';
 import { IS_PUBLIC_KEY } from './public.decorator';

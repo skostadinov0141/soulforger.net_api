@@ -7,13 +7,9 @@ import {
 	NirvePhase1CommonSchema,
 } from './schemas/nirve-phase-1-common.schema';
 import { UserSchema } from 'src/user/schemas/user.schema';
-import {
-	NirveTagSchema,
-	NirveTagSchemaFactory,
-} from '../nirve-tag/schemas/nirve-tag-schema';
+import { NirveTagSchemaFactory } from '../nirve-tag/schemas/nirve-tag-schema';
 import {
 	NirveGroup,
-	NirveGroupSchema,
 	NirveGroupSchemaFactory,
 } from '../nirve-group/schemas/nirve-group.schema';
 

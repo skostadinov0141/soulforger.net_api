@@ -4,7 +4,6 @@ import {
 	ForbiddenException,
 	Injectable,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Observable } from 'rxjs';
 
 @Injectable()

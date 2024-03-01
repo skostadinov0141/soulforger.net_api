@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
-import { ProfileService } from 'src/profile/profile.service';
 import { SearchUserDto } from './dto/search-users.dto';
 import { Profile } from 'src/profile/schemas/profile.schema';
 
@@ -51,7 +50,6 @@ export class UserService {
 
 	async deleteOneById(id: string): Promise<User> {
 		const user = await this.userModel.findById(id);
-		const profile = await this.profileModel.findById(user.profile._id);
 		this.profileModel.findByIdAndDelete(user.profile._id);
 		return this.userModel.findByIdAndRemove(id);
 	}

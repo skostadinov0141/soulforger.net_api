@@ -2,11 +2,7 @@ import { Module } from '@nestjs/common';
 import { NirveTagService } from './nirve-tag.service';
 import { NirveTagController } from './nirve-tag.controller';
 import { getModelToken, MongooseModule } from '@nestjs/mongoose';
-import {
-	NirveTag,
-	NirveTagSchema,
-	NirveTagSchemaFactory,
-} from './schemas/nirve-tag-schema';
+import { NirveTag, NirveTagSchemaFactory } from './schemas/nirve-tag-schema';
 import { UserSchema } from '../user/schemas/user.schema';
 import {
 	NirvePhase1Common,
