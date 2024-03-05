@@ -16,16 +16,10 @@ async function bootstrap() {
 			users: { doc: configService.get<string>('SWAGGER_PW') },
 		}),
 	);
-
-	// app.enableCors({
-	// 	origin: (): string[] => {
-	// 		if (configService.get<string>('NODE_ENV') === 'development') {
-	// 			return ['http://localhost:3001'];
-	// 		}
-	// 		return ['https://soulforger.net', 'https://api.soulforger.net'];
-	// 	},
-	// });
-
+	// if in development, allow all cors origins, if not disable cors
+	if (configService.get<string>('NODE_ENV') === 'development') {
+		app.enableCors({ origin: '*' });
+	}
 	const config = new DocumentBuilder()
 		.addBearerAuth()
 		.setTitle('Soulforger API')
