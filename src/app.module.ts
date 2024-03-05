@@ -9,13 +9,16 @@ import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 import { NirveTagModule } from './nirve-tag/nirve-tag.module';
 import { NirveGroupModule } from './nirve-group/nirve-group.module';
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import * as process from 'process';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ envFilePath: '.env' }),
+		ConfigModule.forRoot({
+			envFilePath: ['.env', 'secret.env'],
+			isGlobal: true,
+		}),
 		MongooseModule.forRoot(
 			`${
 				process.env.NODE_ENV === 'development'
