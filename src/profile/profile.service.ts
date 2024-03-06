@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Profile } from './schemas/profile.schema';
 import { Model } from 'mongoose';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { SearchProfileDto } from './dto/search-profile.dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProfileService {
 	constructor(
 		@InjectModel(Profile.name) private profileModel: Model<Profile>,
+		@Inject(CloudinaryService) private cloudinaryService: CloudinaryService,
 	) {}
 
 	async delete(id: string): Promise<Profile> {
@@ -33,5 +35,12 @@ export class ProfileService {
 		return this.profileModel
 			.find(searchQuery, null, { limit: limit, skip: skip })
 			.exec();
+	}
+
+	async uploadProfileImage(id: string, file: Express.Multer.File): Promise<Profile> {
+		const profile = await this.profileModel.findById(id).exec();
+		const response = await this.cloudinaryService.uploadImage(file);
+		profile.avatarUrl = response.url;
+		return profile.save();
 	}
 }

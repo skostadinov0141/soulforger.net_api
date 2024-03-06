@@ -12,8 +12,8 @@ export class CloudinaryService {
 				if (error) return reject(error);
 				resolve(result);
 			});
-
-			toStream(file.buffer).pipe(upload);
+			// TODO: Request times out
+			//toStream(file.buffer).pipe(upload);
 		});
 	}
 }

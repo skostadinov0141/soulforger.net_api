@@ -5,13 +5,13 @@ import {
 	Param,
 	Patch,
 	Post,
-	Query,
-	UseGuards,
+	Query, Req, UploadedFile,
+	UseGuards, UseInterceptors,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import {
 	ApiBearerAuth,
-	ApiBody,
+	ApiBody, ApiConsumes,
 	ApiOperation,
 	ApiQuery,
 	ApiTags,
@@ -19,6 +19,7 @@ import {
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserIsOwnerGuard } from 'src/own-user/user-is-owner.guard';
 import { SearchProfileDto } from './dto/search-profile.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Profile')
 @Controller('v1/profile')
@@ -56,5 +57,24 @@ export class ProfileController {
 		@Body() profile: UpdateProfileDto,
 	) {
 		return this.profileService.updateById(profileId, profile);
+	}
+
+	@ApiOperation({ summary: 'Upload or update the profile picture of a user.' })
+	@UseInterceptors(FileInterceptor('file'))
+	@ApiConsumes('multipart/form-data')
+	@ApiBody({
+		schema: {
+			type: 'object',
+			properties: {
+				file: {
+					type: 'string',
+					format: 'binary',
+				},
+			},
+		},
+	})
+	@Post('avatar')
+	async uploadProfileImage(@UploadedFile() file: Express.Multer.File, @Req() req){
+		return this.profileService.uploadProfileImage(req.user.sub, file);
 	}
 }
