@@ -5,13 +5,17 @@ import {
 	Param,
 	Patch,
 	Post,
-	Query, Req, UploadedFile,
-	UseGuards, UseInterceptors,
+	Query,
+	Req,
+	UploadedFile,
+	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import {
 	ApiBearerAuth,
-	ApiBody, ApiConsumes,
+	ApiBody,
+	ApiConsumes,
 	ApiOperation,
 	ApiQuery,
 	ApiTags,
@@ -59,7 +63,9 @@ export class ProfileController {
 		return this.profileService.updateById(profileId, profile);
 	}
 
-	@ApiOperation({ summary: 'Upload or update the profile picture of a user.' })
+	@ApiOperation({
+		summary: 'Upload or update the profile picture of a user.',
+	})
 	@UseInterceptors(FileInterceptor('file'))
 	@ApiConsumes('multipart/form-data')
 	@ApiBody({
@@ -74,7 +80,10 @@ export class ProfileController {
 		},
 	})
 	@Post('avatar')
-	async uploadProfileImage(@UploadedFile() file: Express.Multer.File, @Req() req){
+	async uploadProfileImage(
+		@UploadedFile() file: Express.Multer.File,
+		@Req() req,
+	) {
 		return this.profileService.uploadProfileImage(req.user.sub, file);
 	}
 }

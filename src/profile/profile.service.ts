@@ -18,8 +18,6 @@ export class ProfileService {
 	}
 
 	async updateById(id: string, profile: UpdateProfileDto): Promise<Profile> {
-		console.log(profile);
-		console.log(id);
 		return this.profileModel.findByIdAndUpdate(id, profile, { new: true });
 	}
 
@@ -37,10 +35,20 @@ export class ProfileService {
 			.exec();
 	}
 
-	async uploadProfileImage(id: string, file: Express.Multer.File): Promise<Profile> {
-		const profile = await this.profileModel.findById(id).exec();
-		const response = await this.cloudinaryService.uploadImage(file);
-		profile.avatarUrl = response.url;
-		return profile.save();
+	async uploadProfileImage(
+		ownerId: string,
+		file: Express.Multer.File,
+	): Promise<Profile> {
+		const response = await this.cloudinaryService.uploadUserAvatarImage(
+			file,
+			ownerId,
+		);
+		const updatedDoc = await this.profileModel.findOneAndUpdate(
+			{ owner: ownerId },
+			{ avatarUrl: response.url },
+			{ new: true },
+		);
+		console.log(updatedDoc);
+		return updatedDoc;
 	}
 }
