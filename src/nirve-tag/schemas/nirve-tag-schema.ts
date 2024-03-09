@@ -31,15 +31,10 @@ export const NirveTagSchemaFactory = (
 ) => {
 	NirveTagSchema.post('deleteOne', async function () {
 		const _id = this.getQuery()['_id'];
+		console.log('Deleting tag with id: ', _id);
 		await commonModel
 			.updateMany({ tags: _id }, { $pull: { tags: _id } })
 			.exec();
 	});
 	return NirveTagSchema;
 };
-
-// TODO: Add pre-save hooks to update the updatedAt field https://github.com/nestjs/mongoose/issues/7
-// NirveTagSchema.pre(['deleteOne', "deleteMany"], function (this,next) {
-// 	const tag = this;
-// 	NirvePhase1Common
-// });

@@ -4,15 +4,17 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { SearchUserDto } from './dto/search-users.dto';
-import { Profile } from 'src/profile/schemas/profile.schema';
+import { Profile } from 'src/user/schemas/profile.schema';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
 	constructor(
 		@InjectModel(User.name) private userModel: Model<User>,
 		@InjectModel(Profile.name) private profileModel: Model<Profile>,
+		private cloudinary: CloudinaryService,
 	) {}
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
@@ -27,6 +29,7 @@ export class UserService {
 		createdUser.roles = ['user'];
 
 		createdUser.profile = createdProfile;
+		createdProfile.owner = createdUser;
 
 		await createdProfile.save();
 		await createdUser.save();
@@ -40,22 +43,28 @@ export class UserService {
 		return this.userModel.findById(id, { passwordHash: false });
 	}
 
-	async updateOneById(id: string, user: UpdateUserDto): Promise<User> {
-		if (user.passwordHash) {
-			const salt = await bcrypt.genSalt(10);
-			user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
-		}
-		return this.userModel.findByIdAndUpdate(id, user, { new: true });
-	}
-
-	async deleteOneById(id: string): Promise<User> {
-		const user = await this.userModel.findById(id);
-		this.profileModel.findByIdAndDelete(user.profile._id);
-		return this.userModel.findByIdAndRemove(id);
+	async deleteOneById(id: string) {
+		await this.userModel.deleteOne({ _id: id });
 	}
 
 	async findOneByEmail(email: string): Promise<User> {
 		return this.userModel.findOne({ email: email });
+	}
+
+	async updatePassword(id: string, newPw: string): Promise<User> {
+		const user = await this.userModel.findById(id);
+		const salt = await bcrypt.genSalt(10);
+		user.passwordHash = await bcrypt.hash(newPw, salt);
+		user.save();
+		return this.userModel.findById(id, { passwordHash: false });
+	}
+
+	async updateEMail(id: string, newEmail: string): Promise<User> {
+		return this.userModel.findByIdAndUpdate(
+			id,
+			{ email: newEmail },
+			{ new: true, passwordHash: false },
+		);
 	}
 
 	async findAll(
@@ -76,5 +85,26 @@ export class UserService {
 		const user = await this.userModel.findById(id);
 		if (!user) throw new Error('User not found');
 		return this.profileModel.findById(user.profile._id);
+	}
+
+	async updateProfile(id: string, dto: UpdateProfileDto): Promise<Profile> {
+		const profile = await this.profileModel.findOne({ owner: id }).exec();
+		if (!profile) throw new Error('User not found');
+		return this.profileModel.findByIdAndUpdate(profile._id, dto, {
+			new: true,
+		});
+	}
+
+	async updateAvatar(
+		id: string,
+		avatar: Express.Multer.File,
+	): Promise<Profile> {
+		const profile = await this.profileModel
+			.findOneAndUpdate({ owner: id })
+			.exec();
+		if (!profile) throw new Error('User not found');
+		const request = await this.cloudinary.uploadUserAvatarImage(avatar, id);
+		profile.avatarUrl = request.secure_url;
+		return profile.save();
 	}
 }

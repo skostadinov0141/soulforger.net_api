@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 import { NirveTagModule } from './nirve-tag/nirve-tag.module';
 import { NirveGroupModule } from './nirve-group/nirve-group.module';
@@ -30,7 +29,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 		),
 		UserModule,
 		AuthModule,
-		ProfileModule,
 		NirveCreatorModule,
 		NirveTagModule,
 		NirveGroupModule,
