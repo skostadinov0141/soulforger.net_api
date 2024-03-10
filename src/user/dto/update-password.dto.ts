@@ -1,12 +1,9 @@
-import { Contains, IsNotEmpty, Max, Min } from 'class-validator';
+import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 
 export class UpdatePasswordDto {
 	@IsNotEmpty()
-	@Min(8)
-	@Max(128)
-	@Contains('(?=.*[a-z])', {})
-	@Contains('(?=.*[A-Z])', {})
-	@Contains('(?=.*[0-9])', {})
-	@Contains('(?=.*[!@#$%^&*])', {})
+	@Length(8, 128)
+	@Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
+	@IsString()
 	newPassword: string;
 }
