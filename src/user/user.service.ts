@@ -88,9 +88,7 @@ export class UserService {
 	}
 
 	async updateProfile(id: string, dto: UpdateProfileDto): Promise<Profile> {
-		const profile = await this.profileModel.findOne({ owner: id }).exec();
-		if (!profile) throw new Error('User not found');
-		return this.profileModel.findByIdAndUpdate(profile._id, dto, {
+		return this.profileModel.findByIdAndUpdate(id, dto, {
 			new: true,
 		});
 	}

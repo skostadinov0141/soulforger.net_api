@@ -6,5 +6,4 @@ export class UpdateNirveTagDto extends PartialType(CreateNirveTagDto) {
 	@IsString()
 	@Length(4, 192)
 	tag: string;
-	updatedAt: Date;
 }

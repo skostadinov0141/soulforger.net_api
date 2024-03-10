@@ -30,8 +30,10 @@ export class NirveTagService {
 	}
 
 	async update(id: string, updateNirveTagDto: UpdateNirveTagDto) {
-		await this.nirveTagModel.updateOne({ _id: id }, updateNirveTagDto);
-		return this.nirveTagModel.findById(id);
+		return this.nirveTagModel.findOneAndUpdate(
+			{ _id: id },
+			updateNirveTagDto,
+		);
 	}
 
 	remove(id: string) {

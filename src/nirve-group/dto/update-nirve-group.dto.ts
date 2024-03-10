@@ -7,5 +7,4 @@ export class UpdateNirveGroupDto {
 	@IsString()
 	@MaxLength(2048)
 	description: string;
-	updatedAt?: Date;
 }
