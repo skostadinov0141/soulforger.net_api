@@ -6,12 +6,13 @@ import {
 	NirvePhase1Common,
 	NirvePhase1CommonSchema,
 } from './schemas/nirve-phase-1-common.schema';
-import { UserSchema } from 'src/user/schemas/user.schema';
 import { NirveTagSchemaFactory } from '../nirve-tag/schemas/nirve-tag-schema';
 import {
 	NirveGroup,
 	NirveGroupSchemaFactory,
 } from '../nirve-group/schemas/nirve-group.schema';
+import { UserSchemaFactory } from '../user/schemas/user.schema';
+import { Profile, ProfileSchema } from '../user/schemas/profile.schema';
 
 @Module({
 	imports: [
@@ -26,10 +27,18 @@ import {
 				useFactory: NirveGroupSchemaFactory,
 				inject: [getModelToken(NirvePhase1Common.name)],
 			},
-			{ name: 'User', useFactory: () => UserSchema },
+			{
+				name: 'User',
+				useFactory: UserSchemaFactory,
+				inject: [getModelToken(Profile.name)],
+			},
 			{
 				name: 'NirvePhase1Common',
 				useFactory: () => NirvePhase1CommonSchema,
+			},
+			{
+				name: 'Profile',
+				useFactory: () => ProfileSchema,
 			},
 		]),
 	],

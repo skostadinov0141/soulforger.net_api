@@ -43,8 +43,8 @@ export class UserService {
 		return this.userModel.findById(id, { passwordHash: false });
 	}
 
-	async deleteOneById(id: string) {
-		await this.userModel.deleteOne({ _id: id });
+	async deleteOneById(id: string): Promise<User> {
+		return this.userModel.findOneAndDelete({ _id: id });
 	}
 
 	async findOneByEmail(email: string): Promise<User> {

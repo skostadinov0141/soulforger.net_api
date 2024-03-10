@@ -31,12 +31,12 @@ export class User {
 	profile: Profile;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
 
 export const UserSchemaFactory = (profileModel: Model<Profile>) => {
-	UserSchema.pre('deleteOne', function () {
+	UserSchema.post('findOneAndDelete', async function () {
 		const _id = this.getQuery()['_id'];
-		profileModel.deleteOne({ owner: _id }).exec();
+		await profileModel.deleteOne({ owner: _id }).exec();
 	});
 	return UserSchema;
 };

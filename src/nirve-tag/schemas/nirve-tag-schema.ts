@@ -31,7 +31,6 @@ export const NirveTagSchemaFactory = (
 ) => {
 	NirveTagSchema.post('deleteOne', async function () {
 		const _id = this.getQuery()['_id'];
-		console.log('Deleting tag with id: ', _id);
 		await commonModel
 			.updateMany({ tags: _id }, { $pull: { tags: _id } })
 			.exec();

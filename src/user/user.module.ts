@@ -8,6 +8,7 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
 	imports: [
+		CloudinaryModule,
 		MongooseModule.forFeatureAsync([
 			{
 				name: User.name,
@@ -19,7 +20,6 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 				useFactory: () => ProfileSchema,
 			},
 		]),
-		CloudinaryModule,
 	],
 	exports: [UserService],
 	controllers: [UserController],

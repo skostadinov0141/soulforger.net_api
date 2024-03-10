@@ -34,7 +34,6 @@ export const NirveGroupSchemaFactory = (
 ) => {
 	NirveGroupSchema.post('deleteOne', async function () {
 		const _id = this.getQuery()['_id'];
-		console.log('Deleting group', _id);
 		await commonModel
 			.updateMany({ groups: _id }, { $pull: { groups: _id } })
 			.exec();
