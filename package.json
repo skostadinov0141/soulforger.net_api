@@ -33,6 +33,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cloudinary": "^2.0.3",
+    "cloudinary-build-url": "^0.2.4",
     "express-basic-auth": "^1.2.1",
     "mongoose": "^7.6.3",
     "reflect-metadata": "^0.1.13",

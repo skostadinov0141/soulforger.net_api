@@ -105,4 +105,12 @@ export class UserService {
 		profile.avatarUrl = request.secure_url;
 		return profile.save();
 	}
+
+	async deleteAvatar(id: string): Promise<Profile> {
+		const profile = await this.profileModel.findOne({ owner: id }).exec();
+		if (!profile) throw new Error('User not found');
+		await this.cloudinary.deleteImage(profile.avatarUrl);
+		profile.avatarUrl = '';
+		return profile.save();
+	}
 }

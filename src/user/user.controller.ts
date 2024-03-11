@@ -157,4 +157,14 @@ export class UserController {
 	): Promise<Profile> {
 		return this.userService.updateAvatar(id, avatar);
 	}
+
+	@ApiBearerAuth()
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Delete a user's avatar" })
+	@Roles(['admin', 'user'])
+	@Patch(':id/profile/delete-avatar')
+	@ApiParam({ name: 'id', type: String })
+	async deleteProfileAvatar(@Param('id') id: string): Promise<Profile> {
+		return this.userService.deleteAvatar(id);
+	}
 }
