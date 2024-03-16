@@ -1,14 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { SearchUserDto } from './dto/search-users.dto';
 import { Profile } from 'src/user/schemas/profile.schema';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-
 @Injectable()
 export class UserService {
 	constructor(
@@ -82,13 +81,15 @@ export class UserService {
 	}
 
 	async getUserProfile(id: string): Promise<Profile> {
+		if (!mongoose.Types.ObjectId.isValid(id))
+			throw new HttpException('ObjectID is not valid!', 400);
 		const user = await this.userModel.findById(id);
 		if (!user) throw new Error('User not found');
 		return this.profileModel.findById(user.profile._id);
 	}
 
 	async updateProfile(id: string, dto: UpdateProfileDto): Promise<Profile> {
-		return this.profileModel.findByIdAndUpdate(id, dto, {
+		return this.profileModel.findOneAndUpdate({ owner: id }, dto, {
 			new: true,
 		});
 	}

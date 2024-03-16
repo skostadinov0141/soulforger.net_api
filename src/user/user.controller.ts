@@ -110,7 +110,7 @@ export class UserController {
 		return this.userService.updateEMail(id, updateEmailDto.newEmail);
 	}
 
-	@ApiBearerAuth()
+	@Public()
 	@ApiOperation({ summary: "Get a user's profile based on the user's ID" })
 	@Roles(['admin', 'user'])
 	@Get(':id/profile')
