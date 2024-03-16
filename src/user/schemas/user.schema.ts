@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose, { HydratedDocument } from 'mongoose';
-import { Profile } from 'src/profile/schemas/profile.schema';
+import mongoose, { HydratedDocument, Model } from 'mongoose';
+import { Profile } from 'src/user/schemas/profile.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -26,8 +26,17 @@ export class User {
 	@ApiProperty()
 	@Prop()
 	updatedAt: Date;
+	@ApiProperty({ type: () => Profile })
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' })
 	profile: Profile;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+
+export const UserSchemaFactory = (profileModel: Model<Profile>) => {
+	UserSchema.post('findOneAndDelete', async function () {
+		const _id = this.getQuery()['_id'];
+		await profileModel.deleteOne({ owner: _id }).exec();
+	});
+	return UserSchema;
+};

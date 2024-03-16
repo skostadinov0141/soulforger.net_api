@@ -1,10 +1,14 @@
-import { ApiHideProperty } from '@nestjs/swagger';
+import { IsString, Length, MaxLength } from 'class-validator';
 
 export class NirveCreateDto {
+	@IsString()
+	@Length(3, 192)
 	name: string;
+	@IsString()
+	@MaxLength(4096)
 	description: string;
-	@ApiHideProperty()
-	updatedAt: Date;
+	@IsString()
+	@MaxLength(4096)
 	creatorNotes: string;
 	type: NirveTypes;
 	tags: string[];

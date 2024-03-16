@@ -43,6 +43,9 @@ export class NirveCreatorService {
 		dto.tags = await this.nirveTagModel.find({
 			_id: { $in: dto.tags },
 		});
+		dto.groups = await this.nirveGroupModel.find({
+			_id: { $in: dto.groups },
+		});
 		return this.nirveCommonModel.findByIdAndUpdate(id, dto, { new: true });
 	}
 
