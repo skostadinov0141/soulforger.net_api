@@ -89,9 +89,13 @@ export class UserService {
 	}
 
 	async updateProfile(id: string, dto: UpdateProfileDto): Promise<Profile> {
-		return this.profileModel.findOneAndUpdate({ owner: id }, dto, {
-			new: true,
-		});
+		const result = await this.profileModel
+			.findOneAndUpdate({ owner: id }, dto, {
+				new: true,
+			})
+			.exec();
+		if (!result) throw new HttpException('User not found', 404);
+		return result;
 	}
 
 	async updateAvatar(
