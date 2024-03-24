@@ -55,7 +55,6 @@ export class NirveCreatorController {
 		@Body() searchObject: NirveSearchDto,
 		@Query('limit') limit: number,
 		@Query('skip') skip: number,
-		@Req() req: any,
 	): Promise<NirvePhase1Common[]> {
 		return this.nirveCreatorService.findAll(searchObject, limit, skip);
 	}

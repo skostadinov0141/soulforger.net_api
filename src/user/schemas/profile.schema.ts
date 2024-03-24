@@ -1,13 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import * as mongoose from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
+import { User } from './user.schema';
 
 export type ProfileDocument = mongoose.HydratedDocument<Profile>;
 
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class Profile {
 	_id: string;
+	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+	@ApiProperty({ type: () => User })
+	owner: User;
 	@Prop()
 	@ApiProperty()
 	displayName: string;
@@ -35,3 +38,4 @@ export class Profile {
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
+ProfileSchema.index({ owner: 1 }, { unique: true });

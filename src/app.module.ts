@@ -5,15 +5,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ProfileModule } from './profile/profile.module';
 import { NirveCreatorModule } from './nirve-creator/nirve-creator.module';
 import { NirveTagModule } from './nirve-tag/nirve-tag.module';
 import { NirveGroupModule } from './nirve-group/nirve-group.module';
 import * as process from 'process';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ envFilePath: '.env' }),
+		ConfigModule.forRoot({
+			envFilePath: ['.env', 'secret.env'],
+			isGlobal: true,
+		}),
 		MongooseModule.forRoot(
 			`${
 				process.env.NODE_ENV === 'development'
@@ -25,12 +29,12 @@ import * as process from 'process';
 		),
 		UserModule,
 		AuthModule,
-		ProfileModule,
 		NirveCreatorModule,
 		NirveTagModule,
 		NirveGroupModule,
+		CloudinaryModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, CloudinaryService],
 })
 export class AppModule {}

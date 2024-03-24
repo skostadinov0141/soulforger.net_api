@@ -1,16 +1,25 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './schemas/user.schema';
-import { ProfileModule } from 'src/profile/profile.module';
-import { ProfileSchema } from 'src/profile/schemas/profile.schema';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchemaFactory } from './schemas/user.schema';
+import { Profile, ProfileSchema } from 'src/user/schemas/profile.schema';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-		MongooseModule.forFeature([{ name: 'Profile', schema: ProfileSchema }]),
-		ProfileModule,
+		CloudinaryModule,
+		MongooseModule.forFeatureAsync([
+			{
+				name: User.name,
+				useFactory: UserSchemaFactory,
+				inject: [getModelToken(Profile.name)],
+			},
+			{
+				name: 'Profile',
+				useFactory: () => ProfileSchema,
+			},
+		]),
 	],
 	exports: [UserService],
 	controllers: [UserController],

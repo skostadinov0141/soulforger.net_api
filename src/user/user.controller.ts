@@ -6,29 +6,32 @@ import {
 	Param,
 	Patch,
 	Post,
-	Put,
 	Query,
-	Req,
+	UploadedFile,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
 import {
 	ApiBearerAuth,
+	ApiBody,
+	ApiConsumes,
 	ApiOperation,
 	ApiParam,
-	ApiProperty,
 	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
-import { Request } from 'express';
-import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { SearchUserDto } from './dto/search-users.dto';
 import { OwnUserGuard } from 'src/own-user/own-user.guard';
 import { Roles } from 'src/auth/auth.decorator';
 import { Public } from 'src/auth/public.decorator';
+import { Profile } from './schemas/profile.schema';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UpdateEmailDto } from './dto/update-email.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('user')
 @Controller('v1/user')
@@ -69,25 +72,99 @@ export class UserController {
 	}
 
 	@ApiBearerAuth()
-	@ApiOperation({ summary: 'Update a specific user based on their ID' })
-	@Roles(['admin', 'user'])
-	@UseGuards(OwnUserGuard)
-	@Patch(':id')
-	@ApiParam({ name: 'id', type: String })
-	async updateOneByIdParam(
-		@Param('id') id: string,
-		@Body() user: UpdateUserDto,
-	): Promise<User> {
-		return this.userService.updateOneById(id, user);
-	}
-
-	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Delete a specific user based on their ID' })
 	@Roles(['admin', 'user'])
 	@UseGuards(OwnUserGuard)
 	@Delete(':id')
 	@ApiParam({ name: 'id', type: String })
-	async deleteById(@Param('id') id: string): Promise<User> {
+	async deleteById(@Param('id') id: string) {
 		return this.userService.deleteOneById(id);
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Change a user's password" })
+	@Roles(['admin', 'user'])
+	@Patch(':id/update-password')
+	@ApiParam({ name: 'id', type: String })
+	async updatePassword(
+		@Param('id') id: string,
+		@Body() updatePasswordDTO: UpdatePasswordDto,
+	): Promise<User> {
+		return this.userService.updatePassword(
+			id,
+			updatePasswordDTO.newPassword,
+		);
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Change a user's email address" })
+	@Roles(['admin', 'user'])
+	@Patch(':id/update-email')
+	@ApiParam({ name: 'id', type: String })
+	async updateEMail(
+		@Param('id') id: string,
+		@Body() updateEmailDto: UpdateEmailDto,
+	): Promise<User> {
+		return this.userService.updateEMail(id, updateEmailDto.newEmail);
+	}
+
+	@Public()
+	@ApiOperation({ summary: "Get a user's profile based on the user's ID" })
+	@Roles(['admin', 'user'])
+	@Get(':id/profile')
+	@ApiParam({ name: 'id', type: String })
+	async getProfile(@Param('id') id: string): Promise<Profile> {
+		return this.userService.getUserProfile(id);
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Update a user's profile." })
+	@Roles(['admin', 'user'])
+	@Patch(':id/profile')
+	@ApiParam({ name: 'id', type: String })
+	async updateProfile(
+		@Param('id') id: string,
+		@Body() updateProfileDTO: UpdateProfileDto,
+	): Promise<Profile> {
+		return this.userService.updateProfile(id, updateProfileDTO);
+	}
+
+	@ApiBearerAuth()
+	@ApiConsumes('multipart/form-data')
+	@UseInterceptors(FileInterceptor('avatar'))
+	@ApiBody({
+		schema: {
+			type: 'object',
+			properties: {
+				avatar: {
+					type: 'string',
+					format: 'binary',
+				},
+			},
+		},
+	})
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Update a user's avatar image." })
+	@Roles(['admin', 'user'])
+	@Patch(':id/profile/update-avatar')
+	@ApiParam({ name: 'id', type: String })
+	async updateProfileAvatar(
+		@Param('id') id: string,
+		@UploadedFile() avatar: Express.Multer.File,
+	): Promise<Profile> {
+		return this.userService.updateAvatar(id, avatar);
+	}
+
+	@ApiBearerAuth()
+	@UseGuards(OwnUserGuard)
+	@ApiOperation({ summary: "Delete a user's avatar" })
+	@Roles(['admin', 'user'])
+	@Patch(':id/profile/delete-avatar')
+	@ApiParam({ name: 'id', type: String })
+	async deleteProfileAvatar(@Param('id') id: string): Promise<Profile> {
+		return this.userService.deleteAvatar(id);
 	}
 }
