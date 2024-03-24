@@ -35,21 +35,8 @@ FROM node:18-alpine As production
 # Copy the bundled code from the build stage to the production image
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-COPY --chown=node:node --from=build /usr/src/app/ip_update.sh ./
-
-# Give execution privs
-RUN chmod +x ip_update.sh
-
-# Install bash
-RUN apk add --no-cache --upgrade bash
-
-# Install curl
-RUN apk add --no-cache --upgrade curl
-
-# Install jq
-RUN apk add --no-cache --upgrade jq
 
 EXPOSE 8080
 
 # Start the server using the production build
-CMD [ "bash", "./ip_update.sh", "node", "./dist/main.js" ]
+CMD [ "node", "./dist/main.js" ]
