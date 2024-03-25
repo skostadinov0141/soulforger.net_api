@@ -22,11 +22,11 @@ jobs:
         with:
           path: ${{ env.CODE_PATH }}
       - name: Stop Old Container
-        run: docker stop soulforger-api
+        run: docker stop soulforger-api || true
       - name: Remove Old Container
-        run: docker rm soulforger-api
+        run: docker rm soulforger-api || true
       - name: Remove Old Image
-        run: docker rmi soulforger-api
+        run: docker rmi soulforger-api || true
   build:
     runs-on: self-hosted
     needs: prepare
