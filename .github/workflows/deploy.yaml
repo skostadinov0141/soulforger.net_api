@@ -1,0 +1,41 @@
+name: Deploy
+
+on: workflow_dispatch
+
+env:
+  VERSION: ${{ github.ref_name }}
+  CODE_PATH: /home/soulforger/actions-runner/_work/soulforger.net_api/soulforger.net_api
+
+jobs:
+  prepare:
+    runs-on: self-hosted
+    steps:
+#      - name: Set FINAL_PATH based on tag
+#        run: |
+#          if [[ "${{ github.ref_name }}" == *stable* ]]; then
+#            echo "FINAL_PATH=/home/soulforger/stable/$VERSION" >> $GITHUB_ENV
+#          else
+#            echo "FINAL_PATH=/home/soulforger/beta/$VERSION" >> $GITHUB_ENV
+#          fi
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.CODE_PATH }}
+      - name: Stop Old Container
+        run: docker stop soulforger-api
+      - name: Remove Old Container
+        run: docker rm soulforger-api
+      - name: Remove Old Image
+        run: docker rmi soulforger-api
+  build:
+    runs-on: self-hosted
+    needs: prepare
+    steps:
+      - name: Build Docker Image
+        run: docker build -t soulforger-api ${{ env.CODE_PATH }}
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Run Docker Container
+        run: docker run -d --env-file /home/soulforger/backend.env --name soulforger-api -p 8080:8080 soulforger-api
