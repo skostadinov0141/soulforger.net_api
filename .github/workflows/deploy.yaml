@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 env:
   #VERSION: ${{ github.ref_name }}
-  CODE_PATH: /home/soulforger/actions-runner/_work/soulforger.net_api/soulforger.net_api
+  CODE_PATH: /home/soulforger/actions-runner-2/_work/soulforger.net_api/soulforger.net_api
 
 jobs:
   prepare:
