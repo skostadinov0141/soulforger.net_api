@@ -3,7 +3,7 @@ name: Deploy
 on: workflow_dispatch
 
 env:
-  VERSION: ${{ github.ref_name }}
+  #VERSION: ${{ github.ref_name }}
   CODE_PATH: /home/soulforger/actions-runner/_work/soulforger.net_api/soulforger.net_api
 
 jobs:
