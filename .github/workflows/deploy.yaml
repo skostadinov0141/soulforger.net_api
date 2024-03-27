@@ -10,32 +10,45 @@ jobs:
   prepare:
     runs-on: self-hosted
     steps:
-#      - name: Set FINAL_PATH based on tag
-#        run: |
-#          if [[ "${{ github.ref_name }}" == *stable* ]]; then
-#            echo "FINAL_PATH=/home/soulforger/stable/$VERSION" >> $GITHUB_ENV
-#          else
-#            echo "FINAL_PATH=/home/soulforger/beta/$VERSION" >> $GITHUB_ENV
-#          fi
+      - run: |
+          if [[ "${{ github.ref_name }}" == *stable* ]]; then
+            echo "LINE=stable-" >> $GITHUB_ENV
+          else
+            echo "LINE=beta-" >> $GITHUB_ENV
+          fi
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           path: ${{ env.CODE_PATH }}
       - name: Stop Old Container
-        run: docker stop soulforger-api || true
+        run: docker stop soulforger-${LINE}api || true
       - name: Remove Old Container
-        run: docker rm soulforger-api || true
+        run: docker rm soulforger-${LINE}api || true
       - name: Remove Old Image
-        run: docker rmi soulforger-api || true
+        run: docker rmi soulforger-${LINE}api || true
   build:
     runs-on: self-hosted
     needs: prepare
     steps:
+      - run: |
+          if [[ "${{ github.ref_name }}" == *stable* ]]; then
+            echo "LINE=stable-" >> $GITHUB_ENV
+          else
+            echo "LINE=beta-" >> $GITHUB_ENV
+          fi
       - name: Build Docker Image
-        run: docker build -t soulforger-api ${{ env.CODE_PATH }}
+        run: docker build -t soulforger-${LINE}api ${{ env.CODE_PATH }}
   deploy:
     runs-on: self-hosted
     needs: build
     steps:
+      - run: |
+          if [[ "${{ github.ref_name }}" == *stable* ]]; then
+            echo "LINE=stable-" >> $GITHUB_ENV
+            echo "SERVICE_PORT=8081" >> $GITHUB_ENV
+          else
+            echo "LINE=beta-" >> $GITHUB_ENV
+            echo "SERVICE_PORT=8083" >> $GITHUB_ENV
+          fi
       - name: Run Docker Container
-        run: docker run -d --env-file /home/soulforger/backend.env --name soulforger-api -p 8080:8080 soulforger-api
+        run: docker run -d --env-file /home/soulforger/${LINE}backend.env --name soulforger-${LINE}api -p ${SERVICE_PORT}:8080 soulforger-${LINE}api

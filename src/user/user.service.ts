@@ -17,6 +17,11 @@ export class UserService {
 	) {}
 
 	async create(createUserDto: CreateUserDto): Promise<User> {
+		// ensure that the email is unique
+		const user = await this.userModel.findOne({
+			email: createUserDto.email,
+		});
+		if (user) throw new HttpException('Email already in use', 400);
 		const createdUser = new this.userModel(createUserDto);
 		const createdProfile = new this.profileModel();
 
