@@ -20,6 +20,10 @@ async function bootstrap() {
 	// if in development, allow all cors origins, if not disable cors
 	if (configService.get<string>('NODE_ENV') === 'development') {
 		app.enableCors({ origin: '*' });
+	} else {
+		app.enableCors({
+			origin: ['https://beta.soulforger.net', 'https://soulforger.net'],
+		});
 	}
 	// enable validationPipe
 	app.useGlobalPipes(new ValidationPipe());
