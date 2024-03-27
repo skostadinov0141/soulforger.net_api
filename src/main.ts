@@ -21,7 +21,6 @@ async function bootstrap() {
 	if (configService.get<string>('NODE_ENV') === 'development') {
 		app.enableCors({ origin: '*' });
 	}
-	app.enableCors({ origin: '*' });
 	// enable validationPipe
 	app.useGlobalPipes(new ValidationPipe());
 	const config = new DocumentBuilder()
