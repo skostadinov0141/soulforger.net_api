@@ -107,10 +107,8 @@ export class UserService {
 		id: string,
 		avatar: Express.Multer.File,
 	): Promise<Profile> {
-		const profile = await this.profileModel
-			.findOneAndUpdate({ owner: id })
-			.exec();
-		if (!profile) throw new Error('User not found');
+		const profile = await this.profileModel.findOne({ owner: id }).exec();
+		if (!profile) throw new HttpException('User not found', 404);
 		const request = await this.cloudinary.uploadUserAvatarImage(avatar, id);
 		profile.avatarUrl = request.secure_url;
 		return profile.save();
@@ -118,7 +116,7 @@ export class UserService {
 
 	async deleteAvatar(id: string): Promise<Profile> {
 		const profile = await this.profileModel.findOne({ owner: id }).exec();
-		if (!profile) throw new Error('User not found');
+		if (!profile) throw new HttpException('User not found', 404);
 		await this.cloudinary.deleteImage(profile.avatarUrl);
 		profile.avatarUrl = '';
 		return profile.save();
