@@ -25,7 +25,11 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 					: 'mongodb+srv'
 			}://${process.env.DB_ADMIN_UNAME}:${process.env.DB_ADMIN_PW}@${
 				process.env.DB_IP
-			}/soulforger?retryWrites=true&w=majority&authSource=admin`,
+			}/${
+				process.env.NODE_ENV === 'production'
+					? 'soulforger-stable'
+					: 'soulforger-beta'
+			}?retryWrites=true&w=majority&authSource=admin`,
 		),
 		UserModule,
 		AuthModule,
