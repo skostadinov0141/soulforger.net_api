@@ -26,7 +26,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 			}://${process.env.DB_ADMIN_UNAME}:${process.env.DB_ADMIN_PW}@${
 				process.env.DB_IP
 			}/${
-				process.env.NODE_ENV === 'stable'
+				process.env.NODE_ENV === 'production'
 					? process.env.LINE === 'stable'
 						? 'soulforger-stable'
 						: 'soulforger-beta'
